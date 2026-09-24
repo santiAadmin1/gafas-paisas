@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050608;
+  --foreground: #ffffff;
+  --brand-blue: #0b5fdb;
+  --brand-blue-dark: #073e94;
+  --brand-black: #0a0a0f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-blue-dark: var(--brand-blue-dark);
+  --color-brand-black: var(--brand-black);
+  --font-sans: "Poppins", Arial, Helvetica, sans-serif;
+  --font-script: "Dancing Script", cursive;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+}
+
+/* Evita el menú contextual / selección al usar la app como una cámara */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}

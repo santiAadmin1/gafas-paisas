@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Gafas Paisas | Probador Virtual</title>
+<meta name="description" content="Prueba cómo se ven tus gafas antes de comprarlas." />
+<meta name="theme-color" content="#050608" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" />
+<style>
+  :root {
+    --background: #050608;
+    --brand-blue: #0b5fdb;
+    --brand-black: #0a0a0f;
+    --font-sans: "Poppins", Arial, Helvetica, sans-serif;
+    --font-script: "Dancing Script", cursive;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: var(--background);
+    color: #fff;
+    font-family: var(--font-sans);
+    overscroll-behavior: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  button, input { font-family: inherit; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+
+  /* ---------- Landing ---------- */
+  #landing {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    background: var(--brand-black);
+    padding: 40px 24px;
+    text-align: center;
+  }
+  #landing::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 20%, rgba(11,95,219,0.35), transparent 60%);
+  }
+  .landing-mid {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp .6s ease-out forwards;
+  }
+  .landing-tagline {
+    max-width: 320px;
+    font-size: 18px;
+    color: rgba(255,255,255,0.8);
+  }
+  #activate-btn {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 320px;
+    border: none;
+    border-radius: 999px;
+    background: var(--brand-blue);
+    color: #fff;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 30px rgba(11,95,219,0.5);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp .6s ease-out .15s forwards;
+  }
+  #activate-btn:active { filter: brightness(0.9); transform: scale(0.98); }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- Logo ---------- */
+  .logo { display: inline-flex; align-items: center; gap: 12px; }
+  .logo svg { height: 36px; width: auto; flex-shrink: 0; }
+  .logo-words { display: flex; flex-direction: column; line-height: 1; }
+  .logo-script { font-family: var(--font-script); font-size: 24px; margin-bottom: -4px; }
+  .logo-bold { font-family: var(--font-sans); font-weight: 800; letter-spacing: 0.04em; font-size: 18px; }
+
+  /* ---------- App screen ---------- */
+  #app-screen { display: flex; flex-direction: column; height: 100dvh; width: 100%; background: var(--brand-black); }
+  #app-header { display: flex; align-items: center; justify-content: center; padding: 8px 0; }
+  #camera-stage { position: relative; flex: 1 1 auto; min-height: 0; width: 100%; overflow: hidden; background: #000; }
+  #mirror-wrap { position: absolute; inset: 0; transform: scaleX(-1); }
+  #video { height: 100%; width: 100%; object-fit: cover; }
+  #overlay { position: absolute; inset: 0; height: 100%; width: 100%; }
+  .stage-message {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.8); padding: 24px; text-align: center; font-size: 14px;
+  }
+  .stage-hint {
+    position: absolute; top: 24px; left: 0; right: 0; display: flex; justify-content: center; pointer-events: none;
+  }
+  .stage-hint span { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); border-radius: 999px; padding: 8px 16px; font-size: 12px; color: rgba(255,255,255,0.9); }
+
+  #control-panel {
+    height: 30%; min-height: 220px; width: 100%;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 8px;
+    background: var(--brand-black); padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+  #session-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.7); }
+  #session-row button { background: rgba(255,255,255,0.1); border: none; color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; }
+  #session-row button:disabled { opacity: 0.3; }
+  #session-info { display: flex; align-items: center; gap: 8px; overflow: hidden; }
+  #session-info img { height: 32px; width: 32px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); object-fit: contain; background: rgba(255,255,255,0.05); }
+  #session-info span { max-width: 144px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #remove-current { color: rgba(255,255,255,0.5); text-decoration: underline dotted; background: none; padding: 0 !important; }
+
+  #main-actions { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+  .action-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    border: none; border-radius: 16px; padding: 12px; font-size: 12px; font-weight: 500;
+    color: #fff; text-decoration: none; cursor: pointer;
+  }
+  .action-btn .icon { font-size: 20px; }
+  #catalog-btn { background: rgba(255,255,255,0.1); }
+  #catalog-btn:active { background: rgba(255,255,255,0.2); }
+  #upload-label { background: var(--brand-blue); }
+  #upload-label:active { filter: brightness(0.9); }
+  #capture-btn {
+    margin: 0 auto; display: flex; align-items: center; justify-content: center;
+    height: 64px; width: 64px; border-radius: 999px; border: 4px solid #fff;
+    background: var(--brand-blue); font-size: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    cursor: pointer;
+  }
+  #capture-btn:active { transform: scale(0.95); }
+  #capture-btn:disabled { opacity: 0.3; }
+
+  #favorites-toggle {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: rgba(255,255,255,0.05); border: none; color: rgba(255,255,255,0.8);
+    border-radius: 999px; padding: 8px; font-size: 12px; cursor: pointer;
+  }
+
+  /* ---------- Modals ---------- */
+  .modal {
+    position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column;
+    background: rgba(0,0,0,0.95); padding: 16px; color: #fff;
+  }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; }
+  .modal-close { background: rgba(255,255,255,0.1); border: none; color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 14px; cursor: pointer; }
+  #capture-image-wrap { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 16px; background: #000; }
+  #capture-image-wrap img { max-height: 100%; max-width: 100%; object-fit: contain; }
+  .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 16px; }
+  .modal-actions button { border: none; border-radius: 16px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; color: #fff; }
+  #save-fav-btn { background: rgba(255,255,255,0.1); font-weight: 500; }
+  #save-fav-btn:disabled { opacity: 0.3; }
+  #share-wa-btn { background: var(--brand-blue); }
+  #share-wa-btn:disabled { opacity: 0.6; }
+
+  #favorites-empty { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 14px; color: rgba(255,255,255,0.6); padding: 0 24px; }
+  #favorites-grid { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: start; }
+  .fav-card { display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 8px; }
+  .fav-card img { aspect-ratio: 3/4; width: 100%; border-radius: 12px; object-fit: cover; }
+  .fav-card .fav-name { font-size: 12px; color: rgba(255,255,255,0.7); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fav-card .fav-buy { background: var(--brand-blue); border: none; color: #fff; border-radius: 999px; padding: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .fav-card .fav-remove { background: none; border: none; color: rgba(255,255,255,0.5); text-decoration: underline dotted; font-size: 11px; cursor: pointer; padding: 0; }
+</style>
+</head>
+<body>
+
+<!-- ============ Landing ============ -->
+<div id="landing">
+  <div></div>
+  <div class="landing-mid">
+    <div class="logo" id="logo-landing"></div>
+    <p class="landing-tagline">Prueba cómo se ven tus gafas antes de comprarlas</p>
+  </div>
+  <button id="activate-btn">Activar cámara</button>
+</div>
+
+<!-- ============ App screen ============ -->
+<div id="app-screen" hidden>
+  <div id="app-header">
+    <div class="logo" id="logo-header"></div>
+  </div>
+
+  <div id="camera-stage">
+    <div id="mirror-wrap">
+      <video id="video" playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+    <div id="camera-error" class="stage-message" hidden></div>
+    <div id="tracker-loading" class="stage-message">Cargando tracking facial…</div>
+    <div id="face-hint" class="stage-hint" hidden><span>Centra tu rostro en la cámara</span></div>
+  </div>
+
+  <div id="control-panel">
+    <div id="session-row" hidden>
+      <button id="prev-btn">‹ Anterior</button>
+      <div id="session-info">
+        <img id="session-thumb" src="" alt="" hidden />
+        <span id="session-label"></span>
+        <button id="remove-current">quitar</button>
+      </div>
+      <button id="next-btn">Siguiente ›</button>
+    </div>
+
+    <div id="main-actions">
+      <a id="catalog-btn" class="action-btn" href="#" target="_blank" rel="noopener noreferrer">
+        <span class="icon">🛍️</span>Buscar gafas
+      </a>
+      <button id="capture-btn" disabled aria-label="Capturar foto">📸</button>
+      <label id="upload-label" class="action-btn">
+        <span class="icon" id="upload-icon">🕶️</span>
+        <span id="upload-text">Subir gafas</span>
+        <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+      </label>
+    </div>
+
+    <button id="favorites-toggle">⭐ Mis favoritas (<span id="fav-count">0</span>/5)</button>
+  </div>
+</div>
+
+<!-- ============ Capture preview modal ============ -->
+<div id="capture-modal" class="modal" hidden>
+  <div class="modal-head">
+    <span id="capture-glasses-name"></span>
+    <button class="modal-close" id="close-capture">✕ Cerrar</button>
+  </div>
+  <div id="capture-image-wrap"><img id="capture-image" src="" alt="Captura con gafas" /></div>
+  <div class="modal-actions">
+    <button id="save-fav-btn">⭐ Guardar en favoritas</button>
+    <button id="share-wa-btn">Quiero estas gafas 💬</button>
+  </div>
+</div>
+
+<!-- ============ Favorites drawer ============ -->
+<div id="favorites-modal" class="modal" hidden>
+  <div class="modal-head">
+    <h2 style="margin:0;font-size:16px;font-weight:600;">Mis favoritas</h2>
+    <button class="modal-close" id="close-favorites">✕ Cerrar</button>
+  </div>
+  <p id="favorites-empty">Aún no guardas ninguna referencia. Captura una foto con tus gafas puestas y presiona “Guardar en favoritas”.</p>
+  <div id="favorites-grid" hidden></div>
+</div>
+
+<script type="module">
+// ============================================================
+// Gafas Paisas — Probador Virtual (versión HTML estática, sin build)
+// Puerto directo de la lógica de la versión Next.js del proyecto.
+// ============================================================
+
+// ---------- Constantes de marca / negocio ----------
+const WHATSAPP_NUMBER = "573042064121";
+const CATALOG_URL = "https://drive.google.com/drive/folders/1JF5SdGNVkwzYRchjVZN_u6oifwxRNMgg?usp=drive_link";
+const WHATSAPP_INTEREST_MESSAGE = "Hola Gafas Paisas, probé esta referencia virtualmente y estoy interesado en comprarla.";
+const MAX_FAVORITES = 5;
+
+document.getElementById("catalog-btn").href = CATALOG_URL;
+
+// ---------- Logo SVG (gafas + skyline Medellín + wordmark) ----------
+function logoSvg(ink) {
+  return `
+  <svg viewBox="0 0 200 100" role="img" aria-label="Gafas Paisas">
+    <clipPath id="lensClip"><rect x="8" y="26" width="72" height="50" rx="25"/><rect x="120" y="26" width="72" height="50" rx="25"/></clipPath>
+    <g clip-path="url(#lensClip)" fill="${ink}">
+      <rect x="0" y="60" width="200" height="20"/><rect x="10" y="50" width="14" height="30"/>
+      <rect x="28" y="58" width="12" height="22"/><rect x="44" y="44" width="16" height="36"/>
+      <rect x="64" y="56" width="10" height="24"/><rect x="86" y="40" width="14" height="40"/>
+      <rect x="104" y="52" width="12" height="28"/><rect x="120" y="60" width="10" height="20"/>
+      <rect x="134" y="46" width="16" height="34"/><rect x="154" y="58" width="12" height="22"/>
+      <rect x="170" y="38" width="6" height="42"/><rect x="167" y="34" width="12" height="6"/>
+      <rect x="184" y="54" width="12" height="26"/>
+    </g>
+    <g fill="none" stroke="${ink}" stroke-width="7" stroke-linecap="round">
+      <rect x="8" y="26" width="72" height="50" rx="25"/><rect x="120" y="26" width="72" height="50" rx="25"/>
+      <path d="M80 46 Q100 36 120 46"/><path d="M8 40 L-2 34"/><path d="M192 40 L202 34"/>
+    </g>
+  </svg>`;
+}
+function mountLogo(el, { full = true, ink = "#ffffff" } = {}) {
+  el.innerHTML = logoSvg(ink) + (full
+    ? `<span class="logo-words"><span class="logo-script" style="color:${ink}">Gafas</span><span class="logo-bold" style="color:${ink}">PAISAS</span></span>`
+    : "");
+}
+mountLogo(document.getElementById("logo-landing"), { full: true });
+mountLogo(document.getElementById("logo-header"), { full: false });
+
+// ---------- GlassesProcessor: quita fondo + recorta silueta ----------
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+function colorDistance(r1,g1,b1,r2,g2,b2){ return Math.sqrt((r1-r2)**2+(g1-g2)**2+(b1-b2)**2); }
+
+// Quita el fondo con flood-fill desde los bordes: compara cada píxel con su
+// VECINO ya marcado como fondo (no contra un promedio global), así sigue
+// degradados/viñetas de fotos de producto en vez de fallar con fondos no
+// uniformes. Solo lo conectado al borde se vuelve transparente.
+function estimateBorderColor(data, width, height) {
+  let r=0,g=0,b=0,n=0;
+  const stepX = Math.max(1, Math.floor(width/40));
+  const stepY = Math.max(1, Math.floor(height/40));
+  for (let x=0; x<width; x+=stepX) for (const y of [0, height-1]) { const i=(y*width+x)*4; r+=data[i]; g+=data[i+1]; b+=data[i+2]; n++; }
+  for (let y=0; y<height; y+=stepY) for (const x of [0, width-1]) { const i=(y*width+x)*4; r+=data[i]; g+=data[i+1]; b+=data[i+2]; n++; }
+  return { r: r/n, g: g/n, b: b/n };
+}
+
+function floodFillBackground(data, width, height, localTolerance, bgRef, globalTolerance) {
+  const total = width * height;
+  const visited = new Uint8Array(total);
+  const queue = new Int32Array(total);
+  let qHead = 0, qTail = 0;
+  const enqueue = (x, y) => {
+    if (x < 0 || y < 0 || x >= width || y >= height) return;
+    const idx = y * width + x;
+    if (visited[idx]) return;
+    visited[idx] = 1;
+    queue[qTail++] = idx;
+  };
+  for (let x = 0; x < width; x++) { enqueue(x, 0); enqueue(x, height - 1); }
+  for (let y = 0; y < height; y++) { enqueue(0, y); enqueue(width - 1, y); }
+
+  while (qHead < qTail) {
+    const idx = queue[qHead++];
+    const x = idx % width, y = (idx / width) | 0;
+    const i = idx * 4;
+    data[i + 3] = 0;
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const neighbors = [[x-1,y],[x+1,y],[x,y-1],[x,y+1]];
+    for (const [nx, ny] of neighbors) {
+      if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+      const nIdx = ny * width + nx;
+      if (visited[nIdx]) continue;
+      const ni = nIdx * 4;
+      const nr = data[ni], ng = data[ni+1], nb = data[ni+2];
+      if (colorDistance(r, g, b, nr, ng, nb) < localTolerance &&
+          colorDistance(nr, ng, nb, bgRef.r, bgRef.g, bgRef.b) < globalTolerance) {
+        visited[nIdx] = 1;
+        queue[qTail++] = nIdx;
+      }
+    }
+  }
+}
+
+async function processGlassesImage(file) {
+  const url = URL.createObjectURL(file);
+  const img = await loadImage(url);
+  URL.revokeObjectURL(url);
+
+  const srcCanvas = document.createElement("canvas");
+  srcCanvas.width = img.naturalWidth;
+  srcCanvas.height = img.naturalHeight;
+  const sctx = srcCanvas.getContext("2d");
+  sctx.drawImage(img, 0, 0);
+
+  const { width, height } = srcCanvas;
+  const imageData = sctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+
+  let hasRealAlpha = false;
+  for (let i = 3; i < data.length; i += 4*97) { if (data[i] < 250) { hasRealAlpha = true; break; } }
+
+  if (!hasRealAlpha) {
+    const backup = data.slice();
+    const bgRef = estimateBorderColor(data, width, height);
+    floodFillBackground(data, width, height, 26, bgRef, 90);
+    let kept = 0;
+    for (let i = 3; i < data.length; i += 4) if (data[i] > 10) kept++;
+    if (kept < width * height * 0.04) data.set(backup);
+  }
+
+  let minX=width, minY=height, maxX=0, maxY=0, found=false;
+  for (let y=0; y<height; y++) {
+    for (let x=0; x<width; x++) {
+      const alpha = data[(y*width+x)*4 + 3];
+      if (alpha > 10) { found = true; if (x<minX)minX=x; if (x>maxX)maxX=x; if (y<minY)minY=y; if (y>maxY)maxY=y; }
+    }
+  }
+  sctx.putImageData(imageData, 0, 0);
+
+  if (!found) { minX=0; minY=0; maxX=width; maxY=height; }
+  const pad = Math.round(Math.max(maxX-minX, maxY-minY) * 0.03);
+  minX = Math.max(0, minX-pad); minY = Math.max(0, minY-pad);
+  maxX = Math.min(width, maxX+pad); maxY = Math.min(height, maxY+pad);
+  const cropW = Math.max(1, maxX-minX), cropH = Math.max(1, maxY-minY);
+
+  const out = document.createElement("canvas");
+  out.width = cropW; out.height = cropH;
+  out.getContext("2d").drawImage(srcCanvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+
+  const thumb = document.createElement("canvas");
+  thumb.width = 160; thumb.height = Math.round((cropH/cropW)*160);
+  thumb.getContext("2d").drawImage(out, 0, 0, thumb.width, thumb.height);
+
+  return {
+    id: crypto.randomUUID(),
+    name: file.name.replace(/\.[^.]+$/, ""),
+    canvas: out, width: cropW, height: cropH,
+    thumbnail: thumb.toDataURL("image/png"),
+  };
+}
+
+// ---------- FaceTracker: MediaPipe FaceLandmarker ----------
+const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm";
+const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
+
+let landmarker = null;
+let trackerReady = false;
+let trackerError = null;
+
+async function initTracker() {
+  try {
+    const { FaceLandmarker, FilesetResolver } = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/+esm");
+    const fileset = await FilesetResolver.forVisionTasks(WASM_URL);
+    landmarker = await FaceLandmarker.createFromOptions(fileset, {
+      baseOptions: { modelAssetPath: MODEL_URL, delegate: "GPU" },
+      runningMode: "VIDEO",
+      numFaces: 1,
+    });
+    trackerReady = true;
+    document.getElementById("tracker-loading").hidden = true;
+  } catch (e) {
+    trackerError = e instanceof Error ? e.message : "No se pudo iniciar el tracking facial";
+    const el = document.getElementById("camera-error");
+    el.textContent = trackerError;
+    el.hidden = false;
+    document.getElementById("tracker-loading").hidden = true;
+  }
+}
+
+function detectFace(video, timestampMs) {
+  if (!landmarker || video.readyState < 2) return null;
+  const result = landmarker.detectForVideo(video, timestampMs);
+  if (!result.faceLandmarks || result.faceLandmarks.length === 0) return null;
+  return result.faceLandmarks[0];
+}
+
+// ---------- ARRenderer: dibuja la gafa sobre el rostro ----------
+const L_EYE_OUTER = 33, R_EYE_OUTER = 263, NOSE_BRIDGE = 168, L_CHEEK = 234, R_CHEEK = 454, NOSE_TIP = 1;
+const FRAME_TO_INTEROCULAR_RATIO = 2.35;
+const BRIDGE_HEIGHT_FRACTION = 0.42;
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+function drawGlassesOnFace(ctx, canvasW, canvasH, videoW, videoH, landmarks, glasses) {
+  const scale = Math.max(canvasW/videoW, canvasH/videoH);
+  const drawnW = videoW*scale, drawnH = videoH*scale;
+  const offsetX = (canvasW-drawnW)/2, offsetY = (canvasH-drawnH)/2;
+  const toPx = (lm) => ({ x: offsetX + lm.x*drawnW, y: offsetY + lm.y*drawnH });
+
+  const eyeL = toPx(landmarks[L_EYE_OUTER]), eyeR = toPx(landmarks[R_EYE_OUTER]);
+  const bridge = toPx(landmarks[NOSE_BRIDGE]);
+  const cheekL = toPx(landmarks[L_CHEEK]), cheekR = toPx(landmarks[R_CHEEK]);
+  const noseTip = toPx(landmarks[NOSE_TIP]);
+
+  const interocular = Math.hypot(eyeR.x-eyeL.x, eyeR.y-eyeL.y);
+  if (!interocular || interocular < 2) return;
+
+  const angle = Math.atan2(eyeR.y-eyeL.y, eyeR.x-eyeL.x);
+  const leftHalf = Math.hypot(noseTip.x-cheekL.x, noseTip.y-cheekL.y);
+  const rightHalf = Math.hypot(cheekR.x-noseTip.x, cheekR.y-noseTip.y);
+  const yaw = clamp((rightHalf-leftHalf)/interocular, -0.6, 0.6);
+  const shear = clamp(yaw*0.35, -0.25, 0.25);
+  const widthCompensation = 1 - Math.abs(yaw)*0.12;
+
+  const maxFrameWidth = canvasW * 0.5;
+  const frameWidth = Math.min(interocular * FRAME_TO_INTEROCULAR_RATIO * widthCompensation, maxFrameWidth);
+  const glassesScale = frameWidth / glasses.width;
+  const drawW = glasses.width*glassesScale, drawH = glasses.height*glassesScale;
+
+  ctx.save();
+  ctx.translate(bridge.x, bridge.y);
+  ctx.rotate(angle);
+  ctx.transform(1, 0, shear, 1, 0, 0);
+  ctx.drawImage(glasses.canvas, -drawW/2, -drawH*BRIDGE_HEIGHT_FRACTION, drawW, drawH);
+  ctx.restore();
+}
+
+// ---------- ShareController ----------
+function dataUrlToFile(dataUrl, filename) {
+  const [header, base64] = dataUrl.split(",");
+  const mime = header.match(/data:(.*);base64/)?.[1] ?? "image/png";
+  const bytes = atob(base64);
+  const arr = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+  return new File([arr], filename, { type: mime });
+}
+function whatsappLink(message) { return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`; }
+function downloadDataUrl(dataUrl, filename) {
+  const a = document.createElement("a");
+  a.href = dataUrl; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+async function shareCaptureToWhatsapp(captureDataUrl, message = WHATSAPP_INTEREST_MESSAGE) {
+  const file = dataUrlToFile(captureDataUrl, "gafas-paisas-prueba.png");
+  if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], text: message, title: "Gafas Paisas" });
+      return;
+    } catch { /* el usuario canceló: seguimos con el respaldo */ }
+  }
+  downloadDataUrl(captureDataUrl, "gafas-paisas-prueba.png");
+  window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
+}
+
+// ---------- SessionManager (estado en memoria, sin backend) ----------
+const session = { items: [], currentIndex: 0, favorites: [] };
+
+function currentGlasses() { return session.items[session.currentIndex] ?? null; }
+
+function renderSessionUI() {
+  const row = document.getElementById("session-row");
+  const has = session.items.length > 0;
+  row.hidden = !has;
+  document.getElementById("prev-btn").disabled = session.items.length < 2;
+  document.getElementById("next-btn").disabled = session.items.length < 2;
+  const cur = currentGlasses();
+  const thumb = document.getElementById("session-thumb");
+  if (cur) { thumb.src = cur.thumbnail; thumb.hidden = false; } else { thumb.hidden = true; }
+  document.getElementById("session-label").textContent = cur
+    ? `${cur.name} · ${session.items.length} ${session.items.length === 1 ? "referencia" : "referencias"}`
+    : "Sin gafas";
+  document.getElementById("capture-btn").disabled = !cur;
+  document.getElementById("fav-count").textContent = String(session.favorites.length);
+}
+
+document.getElementById("prev-btn").addEventListener("click", () => {
+  if (!session.items.length) return;
+  session.currentIndex = (session.currentIndex - 1 + session.items.length) % session.items.length;
+  renderSessionUI();
+});
+document.getElementById("next-btn").addEventListener("click", () => {
+  if (!session.items.length) return;
+  session.currentIndex = (session.currentIndex + 1) % session.items.length;
+  renderSessionUI();
+});
+document.getElementById("remove-current").addEventListener("click", () => {
+  if (!session.items.length) return;
+  session.items.splice(session.currentIndex, 1);
+  session.currentIndex = Math.max(0, Math.min(session.currentIndex, session.items.length - 1));
+  renderSessionUI();
+});
+
+const uploadIcon = document.getElementById("upload-icon");
+const uploadText = document.getElementById("upload-text");
+document.getElementById("file-input").addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  e.target.value = "";
+  if (!file) return;
+  uploadIcon.textContent = "⏳";
+  uploadText.textContent = "Procesando…";
+  try {
+    const processed = await processGlassesImage(file);
+    session.items.push(processed);
+    session.currentIndex = session.items.length - 1;
+    renderSessionUI();
+  } finally {
+    uploadIcon.textContent = "🕶️";
+    uploadText.textContent = "Subir gafas";
+  }
+});
+
+// ---------- Cámara + loop de tracking/render ----------
+const video = document.getElementById("video");
+const overlay = document.getElementById("overlay");
+const octx = overlay.getContext("2d");
+let faceFound = false;
+
+async function initCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+    video.srcObject = stream;
+    await video.play();
+  } catch {
+    const el = document.getElementById("camera-error");
+    el.textContent = "No pudimos acceder a tu cámara. Revisa los permisos del navegador.";
+    el.hidden = false;
+  }
+}
+
+function loop() {
+  if (video.readyState >= 2) {
+    const rect = overlay.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.round(rect.width * dpr), h = Math.round(rect.height * dpr);
+    if (overlay.width !== w || overlay.height !== h) { overlay.width = w; overlay.height = h; }
+    octx.clearRect(0, 0, overlay.width, overlay.height);
+
+    if (trackerReady) {
+      const landmarks = detectFace(video, performance.now());
+      const found = !!landmarks;
+      if (found !== faceFound) {
+        faceFound = found;
+        document.getElementById("face-hint").hidden = found;
+      }
+      const glasses = currentGlasses();
+      if (landmarks && glasses) {
+        drawGlassesOnFace(octx, overlay.width, overlay.height, video.videoWidth, video.videoHeight, landmarks, glasses);
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+function captureFrame() {
+  const out = document.createElement("canvas");
+  out.width = overlay.width; out.height = overlay.height;
+  const ctx = out.getContext("2d");
+  ctx.save();
+  ctx.translate(out.width, 0);
+  ctx.scale(-1, 1);
+  const scale = Math.max(out.width / video.videoWidth, out.height / video.videoHeight);
+  const w = video.videoWidth * scale, h = video.videoHeight * scale;
+  ctx.drawImage(video, (out.width - w) / 2, (out.height - h) / 2, w, h);
+  ctx.drawImage(overlay, 0, 0, out.width, out.height);
+  ctx.restore();
+  return out.toDataURL("image/png");
+}
+
+// ---------- Navegación landing -> app ----------
+document.getElementById("activate-btn").addEventListener("click", () => {
+  document.getElementById("landing").hidden = true;
+  document.getElementById("app-screen").hidden = false;
+  initCamera();
+  initTracker();
+  requestAnimationFrame(loop);
+}, { once: true });
+
+// ---------- Captura ----------
+document.getElementById("capture-btn").addEventListener("click", () => {
+  const glasses = currentGlasses();
+  if (!glasses) return;
+  const dataUrl = captureFrame();
+  document.getElementById("capture-image").src = dataUrl;
+  document.getElementById("capture-glasses-name").textContent = glasses.name;
+  document.getElementById("save-fav-btn").disabled = session.favorites.length >= MAX_FAVORITES;
+  document.getElementById("capture-modal").hidden = false;
+});
+document.getElementById("close-capture").addEventListener("click", () => {
+  document.getElementById("capture-modal").hidden = true;
+});
+document.getElementById("save-fav-btn").addEventListener("click", () => {
+  if (session.favorites.length >= MAX_FAVORITES) return;
+  const glasses = currentGlasses();
+  session.favorites.push({
+    id: crypto.randomUUID(),
+    glassesName: glasses ? glasses.name : "Gafas Paisas",
+    capture: document.getElementById("capture-image").src,
+  });
+  renderSessionUI();
+  document.getElementById("capture-modal").hidden = true;
+});
+document.getElementById("share-wa-btn").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.textContent = "Abriendo…";
+  try {
+    await shareCaptureToWhatsapp(document.getElementById("capture-image").src);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+});
+
+// ---------- Favoritas ----------
+function renderFavorites() {
+  const grid = document.getElementById("favorites-grid");
+  const empty = document.getElementById("favorites-empty");
+  if (session.favorites.length === 0) {
+    empty.hidden = false; grid.hidden = true; grid.innerHTML = "";
+    return;
+  }
+  empty.hidden = true; grid.hidden = false;
+  grid.innerHTML = "";
+  for (const fav of session.favorites) {
+    const card = document.createElement("div");
+    card.className = "fav-card";
+    card.innerHTML = `
+      <img src="${fav.capture}" alt="${fav.glassesName}" />
+      <span class="fav-name">${fav.glassesName}</span>
+      <button class="fav-buy">Comprar esta</button>
+      <button class="fav-remove">quitar de favoritas</button>
+    `;
+    card.querySelector(".fav-buy").addEventListener("click", () => shareCaptureToWhatsapp(fav.capture));
+    card.querySelector(".fav-remove").addEventListener("click", () => {
+      session.favorites = session.favorites.filter((f) => f.id !== fav.id);
+      renderSessionUI();
+      renderFavorites();
+    });
+    grid.appendChild(card);
+  }
+}
+document.getElementById("favorites-toggle").addEventListener("click", () => {
+  renderFavorites();
+  document.getElementById("favorites-modal").hidden = false;
+});
+document.getElementById("close-favorites").addEventListener("click", () => {
+  document.getElementById("favorites-modal").hidden = true;
+});
+</script>
+</body>
+</html>

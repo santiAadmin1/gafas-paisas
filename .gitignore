@@ -1,0 +1,17 @@
+# Dependencias y builds
+node_modules/
+.next/
+out/
+build/
+
+# Variables de entorno (claves de API, etc.)
+.env*
+
+# Configuración local de Claude / editores
+.claude/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Fotos de prueba locales
+**/public/_pruebas/
