@@ -49,6 +49,22 @@ export function useSession() {
     }
   }, []);
 
+  /** Asocia la foto de la pata a la gafa actual. */
+  const addTemple = useCallback(
+    async (file: File) => {
+      const id = items[currentIndex]?.id;
+      if (!id) return;
+      setProcessing(true);
+      try {
+        const processed = await processGlassesImage(file);
+        setItems((prev) => prev.map((g) => (g.id === id ? { ...g, temple: processed.canvas } : g)));
+      } finally {
+        setProcessing(false);
+      }
+    },
+    [items, currentIndex]
+  );
+
   const removeCurrent = useCallback(() => {
     setItems((prev) => {
       if (prev.length === 0) return prev;
@@ -108,6 +124,7 @@ export function useSession() {
     currentIndex,
     processing,
     addGlasses,
+    addTemple,
     removeCurrent,
     next,
     prev,

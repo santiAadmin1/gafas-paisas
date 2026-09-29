@@ -46,6 +46,7 @@ export default function Home() {
           current={session.current}
           processing={session.processing}
           onUpload={(file) => session.addGlasses(file)}
+          onUploadTemple={(file) => session.addTemple(file)}
           onPrev={session.prev}
           onNext={session.next}
           onRemoveCurrent={session.removeCurrent}

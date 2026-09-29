@@ -8,6 +8,7 @@ type Props = {
   current: ProcessedGlasses | null;
   processing: boolean;
   onUpload: (file: File) => void;
+  onUploadTemple: (file: File) => void;
   onPrev: () => void;
   onNext: () => void;
   onRemoveCurrent: () => void;
@@ -22,6 +23,7 @@ export function ControlPanel({
   current,
   processing,
   onUpload,
+  onUploadTemple,
   onPrev,
   onNext,
   onRemoveCurrent,
@@ -57,6 +59,25 @@ export function ControlPanel({
               <span className="shrink-0 text-amber-400" title="No detectamos bien el fondo de esta foto: usa el ajuste manual.">
                 ⚠️
               </span>
+            )}
+            {current && (
+              <label
+                className="shrink-0 cursor-pointer rounded-full bg-white/10 px-2 py-1 text-white/80"
+                title="Sube una foto lateral de la pata (bisagra a la izquierda)"
+              >
+                {current.temple ? "pata ✓" : "+ pata"}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  disabled={processing}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) onUploadTemple(file);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
             )}
             {current && (
               <button onClick={onOpenAdjust} className="shrink-0 text-white/70" aria-label="Ajustar manualmente">

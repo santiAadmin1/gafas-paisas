@@ -21,6 +21,12 @@ export type ProcessedGlasses = {
    * use el ajuste manual.
    */
   possiblyUnsegmented: boolean;
+  /**
+   * Foto lateral de una pata (opcional), ya recortada: bisagra a la
+   * izquierda, punta de la oreja a la derecha. Sin ella se dibuja una pata
+   * genérica del color de la montura.
+   */
+  temple?: HTMLCanvasElement;
 };
 
 function colorDistance(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number) {

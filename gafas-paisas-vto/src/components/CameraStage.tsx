@@ -2,7 +2,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useFaceLandmarker } from "@/hooks/useFaceLandmarker";
-import { drawGlassesOnFace } from "@/lib/arRenderer";
+import { GlassesRenderer } from "@/lib/arRenderer";
 import type { ProcessedGlasses } from "@/lib/glassesProcessor";
 import { DEFAULT_ADJUSTMENT, type Adjustment } from "@/hooks/useSession";
 
@@ -87,7 +87,8 @@ export const CameraStage = forwardRef<CameraStageHandle, Props>(function CameraS
   }, []);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !canvasRef.current) return;
+    const glassesRenderer = new GlassesRenderer(canvasRef.current);
 
     function loop() {
       const video = videoRef.current;
@@ -97,29 +98,22 @@ export const CameraStage = forwardRef<CameraStageHandle, Props>(function CameraS
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         const w = Math.round(rect.width * dpr);
         const h = Math.round(rect.height * dpr);
-        if (canvas.width !== w || canvas.height !== h) {
-          canvas.width = w;
-          canvas.height = h;
-        }
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const result = detect(video, performance.now());
-          const found = !!result;
-          setFaceFound((prev) => (prev !== found ? found : prev));
-          onFaceDetected?.(found);
-          if (result && glassesRef.current) {
-            drawGlassesOnFace(
-              ctx,
-              canvas.width,
-              canvas.height,
-              video.videoWidth,
-              video.videoHeight,
-              result.landmarks,
-              glassesRef.current,
-              adjustmentRef.current
-            );
-          }
+        const result = detect(video, performance.now());
+        const found = !!result;
+        setFaceFound((prev) => (prev !== found ? found : prev));
+        onFaceDetected?.(found);
+        if (result && glassesRef.current) {
+          glassesRenderer.render(
+            w,
+            h,
+            video.videoWidth,
+            video.videoHeight,
+            result.landmarks,
+            glassesRef.current,
+            adjustmentRef.current
+          );
+        } else {
+          glassesRenderer.clear(w, h);
         }
       }
       rafRef.current = requestAnimationFrame(loop);
@@ -128,6 +122,7 @@ export const CameraStage = forwardRef<CameraStageHandle, Props>(function CameraS
     rafRef.current = requestAnimationFrame(loop);
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      glassesRenderer.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready]);
