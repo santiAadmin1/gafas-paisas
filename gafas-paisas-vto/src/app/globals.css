@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050608;
+  --background: #071832;
   --foreground: #ffffff;
-  --brand-blue: #0b5fdb;
-  --brand-blue-dark: #073e94;
-  --brand-black: #0a0a0f;
+  --brand-blue: #0064e0;
+  --brand-blue-dark: #004fb7;
+  --brand-black: #071227;
 }
 
 @theme inline {
@@ -18,16 +18,18 @@
   --font-script: "Dancing Script", cursive;
 }
 
+html, body { min-height: 100%; }
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   overscroll-behavior: none;
 }
-
-/* Evita el menú contextual / selección al usar la app como una cámara */
-.no-select {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 3px solid #78afff; outline-offset: 3px; }
+.no-select { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
