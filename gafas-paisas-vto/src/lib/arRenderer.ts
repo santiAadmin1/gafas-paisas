@@ -16,7 +16,9 @@ const R_EYE_OUTER = 263;
 // Todas las medidas de abajo están en "anchos de cara" (distancia 3D
 // entre 234 y 454 = 1).
 // Ancho de la montura: una montura bien escogida llega casi al borde de la cara.
-const FRAME_TO_FACE_RATIO = 0.95;
+// (Mayor que 1: el recorte trae un margen y las mejillas 234/454 quedan un
+// poco por fuera del borde visible de la cara.)
+const FRAME_TO_FACE_RATIO = 1.1;
 // Fracción de la altura de la imagen de la gafa que queda por ENCIMA del
 // puente nasal (anclaje).
 const BRIDGE_HEIGHT_FRACTION = 0.42;
@@ -29,11 +31,11 @@ const TEMPLE_LENGTH = 0.78;
 // pegadas y no flotando.
 const TEMPLE_SPREAD = -0.03;
 // Inclinación hacia abajo de la pata para que se apoye sobre la oreja (rad).
-const TEMPLE_PITCH = 0.02;
+const TEMPLE_PITCH = 0.1;
 const TEMPLE_HEIGHT_FRONT = 0.045;
 const TEMPLE_HEIGHT_BACK = 0.022;
 const TEMPLE_THICKNESS = 0.014;
-const HINGE_FROM_TOP = 0.28; // fracción de la altura de la montura, medida desde arriba
+const HINGE_FROM_TOP = 0.34; // fracción de la altura de la montura, medida desde arriba
 // "Cabeza invisible" que tapa la pata del lado contrario al girar.
 // Más angosta (x) que la distancia entre patas: si no, la pata del lado
 // cercano se "hunde" en la cabeza y se corta a mitad de camino.
