@@ -1,6 +1,5 @@
 "use client";
 
-import { CATALOG_URL } from "@/lib/constants";
 import type { ProcessedGlasses } from "@/lib/glassesProcessor";
 
 type Props = {
@@ -15,6 +14,9 @@ type Props = {
   onCapture: () => void;
   onOpenFavorites: () => void;
   onOpenAdjust: () => void;
+  onOpenCatalog: () => void;
+  /** URL de pedido por WhatsApp (código + nombre ya incorporados). */
+  orderUrl: string | null;
   favoritesCount: number;
 };
 
@@ -30,6 +32,8 @@ export function ControlPanel({
   onCapture,
   onOpenFavorites,
   onOpenAdjust,
+  onOpenCatalog,
+  orderUrl,
   favoritesCount,
 }: Props) {
   return (
@@ -105,15 +109,13 @@ export function ControlPanel({
       )}
 
       <div className="grid grid-cols-3 items-center gap-3">
-        <a
-          href={CATALOG_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={onOpenCatalog}
           className="flex flex-col items-center gap-1 rounded-2xl bg-white/10 py-3 text-xs font-medium active:bg-white/20"
         >
-          <span aria-hidden className="text-xl">🛍️</span>
-          Buscar gafas
-        </a>
+          <span aria-hidden className="text-xl">🕶️</span>
+          Catálogo
+        </button>
 
         <button
           onClick={onCapture}
@@ -124,9 +126,9 @@ export function ControlPanel({
           📸
         </button>
 
-        <label className="flex flex-col items-center gap-1 rounded-2xl bg-brand-blue py-3 text-xs font-medium active:brightness-90">
-          <span aria-hidden className="text-xl">{processing ? "⏳" : "🕶️"}</span>
-          {processing ? "Procesando…" : "Subir gafas"}
+        <label className="flex flex-col items-center gap-1 rounded-2xl bg-white/10 py-3 text-xs font-medium active:bg-white/20">
+          <span aria-hidden className="text-xl">{processing ? "⏳" : "⬆️"}</span>
+          {processing ? "Procesando…" : "Subir foto"}
           <input
             type="file"
             accept="image/png,image/jpeg,image/webp"
@@ -140,12 +142,24 @@ export function ControlPanel({
         </label>
       </div>
 
-      <button
-        onClick={onOpenFavorites}
-        className="flex items-center justify-center gap-2 rounded-full bg-white/5 py-2 text-xs text-white/80"
-      >
-        ⭐ Mis favoritas ({favoritesCount}/5)
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onOpenFavorites}
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-white/5 py-2 text-xs text-white/80"
+        >
+          ⭐ Mis favoritas ({favoritesCount}/5)
+        </button>
+        {orderUrl && (
+          <a
+            href={orderUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-brand-blue py-2 text-xs font-semibold text-white active:brightness-90"
+          >
+            🟢 Pedir por WhatsApp
+          </a>
+        )}
+      </div>
     </div>
   );
 }

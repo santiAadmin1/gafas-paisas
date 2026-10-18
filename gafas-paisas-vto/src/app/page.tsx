@@ -7,20 +7,39 @@ import { ControlPanel } from "@/components/ControlPanel";
 import { CapturePreview } from "@/components/CapturePreview";
 import { FavoritesDrawer } from "@/components/FavoritesDrawer";
 import { AdjustPanel } from "@/components/AdjustPanel";
+import { ModelPicker } from "@/components/ModelPicker";
 import { Logo } from "@/components/Logo";
 import { useSession } from "@/hooks/useSession";
+import { buildOrderMessage, buildWhatsAppUrl } from "@/lib/constants";
 
 export default function Home() {
   const [cameraActive, setCameraActive] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
   const [showAdjust, setShowAdjust] = useState(false);
+  const [showCatalog, setShowCatalog] = useState(false);
   const [capture, setCapture] = useState<string | null>(null);
   const stageRef = useRef<CameraStageHandle>(null);
 
   const session = useSession();
 
+  // Pedido conservando el CÓDIGO solicitado + nombre (no inventa precio).
+  const orderUrl = session.selectedModel
+    ? buildWhatsAppUrl(buildOrderMessage(session.selectedModel.id, session.selectedModel.name))
+    : null;
+
+  const activate = (modelId?: string) => {
+    setCameraActive(true);
+    if (modelId) session.loadModel(modelId);
+  };
+
   if (!cameraActive) {
-    return <Landing onActivate={() => setCameraActive(true)} />;
+    return (
+      <Landing
+        catalog={session.catalog}
+        selectedId={session.selectedModelId}
+        onActivate={activate}
+      />
+    );
   }
 
   return (
@@ -56,9 +75,40 @@ export default function Home() {
           }}
           onOpenFavorites={() => setShowFavorites(true)}
           onOpenAdjust={() => setShowAdjust((v) => !v)}
+          onOpenCatalog={() => setShowCatalog(true)}
+          orderUrl={orderUrl}
           favoritesCount={session.favorites.length}
         />
       </div>
+
+      {showCatalog && (
+        <div className="absolute inset-0 z-30 flex flex-col bg-brand-black/95 backdrop-blur">
+          <div className="flex items-center justify-between px-4 py-3">
+            <h2 className="text-sm font-semibold text-white">Catálogo de monturas</h2>
+            <button
+              onClick={() => setShowCatalog(false)}
+              className="rounded-full bg-white/10 px-3 py-1.5 text-xs text-white/80"
+            >
+              Cerrar ✕
+            </button>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
+            {session.loadError && (
+              <p className="mb-3 rounded-lg bg-red-500/20 px-3 py-2 text-xs text-red-200">
+                {session.loadError}
+              </p>
+            )}
+            <ModelPicker
+              models={session.catalog}
+              selectedId={session.selectedModelId}
+              onSelect={(id) => {
+                session.loadModel(id);
+                setShowCatalog(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {capture && (
         <CapturePreview

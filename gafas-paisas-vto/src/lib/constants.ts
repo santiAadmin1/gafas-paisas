@@ -17,3 +17,16 @@ export const WHATSAPP_GENERIC_MESSAGE =
   "Hola Gafas Paisas, quiero ver el catálogo de monturas.";
 
 export const MAX_FAVORITES = 5;
+
+/** URL de WhatsApp con un mensaje ya codificado. */
+export function buildWhatsAppUrl(message: string): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Mensaje de pedido conservando código y nombre del modelo (lo que la app
+ * ya conoce). No inventa precio ni disponibilidad.
+ */
+export function buildOrderMessage(code: string, name: string): string {
+  return `${WHATSAPP_INTEREST_MESSAGE}\n\nReferencia: ${code} — ${name}`;
+}
