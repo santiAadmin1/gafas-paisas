@@ -212,7 +212,9 @@ export async function processGlassesImage(file: File): Promise<ProcessedGlasses>
       oc.height = height;
       const octx = oc.getContext("2d")!;
       octx.drawImage(orig, 0, 0);
-      fillLensHoles(data, octx.getImageData(0, 0, width, height).data, width, height);
+      const origData = octx.getImageData(0, 0, width, height).data;
+      restoreSolidRegions(data, origData, width, height);
+      fillLensHoles(data, origData, width, height);
     }
     if (orig) URL.revokeObjectURL(orig.src);
   }
@@ -294,6 +296,47 @@ export async function processGlassesImage(file: File): Promise<ProcessedGlasses>
     height: cropH,
     thumbnail: thumbCanvas.toDataURL("image/png"),
   };
+}
+
+/**
+ * Devuelve lo que la IA borró de más: lentes de color/espejados que no
+ * quedan encerrados por la montura (ej. gafas deportivas de un solo lente,
+ * que sobresale por los lados) y que `fillLensHoles` no puede recuperar.
+ * Se restaura todo píxel que NO está conectado al fondo (flood-fill por
+ * color sobre la foto original) y cuyo color se aleja claramente del fondo.
+ * Los lentes transparentes (del color del fondo) no se tocan: esos los
+ * maneja `fillLensHoles`.
+ */
+function restoreSolidRegions(
+  data: Uint8ClampedArray,
+  orig: Uint8ClampedArray,
+  width: number,
+  height: number
+) {
+  const mask = orig.slice();
+  const bgRef = estimateBorderColor(mask, width, height);
+  floodFillBackground(mask, width, height, 26, bgRef, 90);
+
+  const total = width * height;
+  let removed = 0;
+  for (let i = 3; i < mask.length; i += 4) if (mask[i] === 0) removed++;
+  // Si el fondo no se pudo separar por color (fondo con textura, escena
+  // real), restaurar traería de vuelta parte del fondo: mejor confiar en la IA.
+  // (Umbral bajo: en gafas deportivas que llenan la foto el fondo es ~30%.)
+  if (removed < total * 0.15) return;
+
+  for (let i = 0; i < total; i++) {
+    const p = i * 4;
+    if (mask[p + 3] === 0 || data[p + 3] === 255) continue;
+    const r = orig[p],
+      g = orig[p + 1],
+      b = orig[p + 2];
+    if (colorDistance(r, g, b, bgRef.r, bgRef.g, bgRef.b) < 60) continue;
+    data[p] = r;
+    data[p + 1] = g;
+    data[p + 2] = b;
+    data[p + 3] = 255;
+  }
 }
 
 /**

@@ -26,11 +26,17 @@ export type CatalogModel = {
   parConfianza: ParConfianza;
   /** Avisos de calidad para el panel interno / documentación. */
   avisos?: string[];
+  /**
+   * Dónde empieza la pata en la foto lateral (fracción 0–1 del ancho del
+   * recorte, desde la izquierda). Solo hace falta cuando el recorte
+   * automático no distingue el frente de la pata (pata tan alta como el aro).
+   */
+  pataInicio?: number;
 };
 
 export const CATALOGO: CatalogModel[] = [
   { id: "GP-01", name: "Wayfarer Negra", tipo: "Wayfarer", colorMontura: "Negro", colorLente: "Verde oliva", frontal: "/catalogo/GP-01_Wayfarer-Negra_frontal.png", lateral: "/catalogo/GP-01_Wayfarer-Negra_lateral.png", thumb: "/catalogo/thumbs/GP-01.jpg", activo: true, parConfianza: "alta" },
-  { id: "GP-02", name: "Cat-Eye Chanel", tipo: "Cat-eye", colorMontura: "Negro", colorLente: "Borgoña", frontal: "/catalogo/GP-02_Cat-Eye-Chanel_frontal.png", lateral: "/catalogo/GP-02_Cat-Eye-Chanel_lateral.png", thumb: "/catalogo/thumbs/GP-02.jpg", activo: true, parConfianza: "alta" },
+  { id: "GP-02", name: "Cat-Eye Chanel", tipo: "Cat-eye", colorMontura: "Negro", colorLente: "Borgoña", frontal: "/catalogo/GP-02_Cat-Eye-Chanel_frontal.png", lateral: "/catalogo/GP-02_Cat-Eye-Chanel_lateral.png", thumb: "/catalogo/thumbs/GP-02.jpg", activo: true, parConfianza: "alta", pataInicio: 0.18 },
   { id: "GP-03", name: "Deportiva Oval Gris", tipo: "Deportiva / Oval", colorMontura: "Gris", colorLente: "Multicolor espejo", frontal: "/catalogo/GP-03_Deportiva-Oval-Gris_frontal.png", lateral: "/catalogo/GP-03_Deportiva-Oval-Gris_lateral.png", thumb: "/catalogo/thumbs/GP-03.jpg", activo: true, parConfianza: "alta" },
   { id: "GP-04", name: "Deportiva Rect Negra", tipo: "Deportiva / Rectangular", colorMontura: "Negro", colorLente: "Espejo azul-verde", frontal: "/catalogo/GP-04_Deportiva-Rect-Negra_frontal.png", lateral: "/catalogo/GP-04_Deportiva-Rect-Negra_lateral.png", thumb: "/catalogo/thumbs/GP-04.jpg", activo: true, parConfianza: "media", avisos: ["Emparejamiento de pata por verificar visualmente."] },
   { id: "GP-05", name: "Deportiva Shield Roja", tipo: "Deportiva / Shield", colorMontura: "Rojo", colorLente: "Espejo rojo", frontal: "/catalogo/GP-05_Deportiva-Shield-Roja_frontal.png", lateral: "/catalogo/GP-05_Deportiva-Shield-Roja_lateral.png", thumb: "/catalogo/thumbs/GP-05.jpg", activo: true, parConfianza: "media", avisos: ["Emparejamiento de pata por verificar visualmente."] },
