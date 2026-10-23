@@ -19,6 +19,22 @@ const R_EYE_OUTER = 263;
 // (Mayor que 1: el recorte trae un margen y las mejillas 234/454 quedan un
 // poco por fuera del borde visible de la cara.)
 const FRAME_TO_FACE_RATIO = 1.1;
+
+// Tamaño real (cuando la gafa trae su ancho en mm): el iris humano adulto
+// mide ~11,7 mm casi sin variar entre personas, así que sirve de regla para
+// pasar de mm a píxeles en la cara de cada quien.
+const IRIS_DIAMETER_MM = 11.7;
+// Iris (MediaPipe, 478 puntos): bordes der./sup./izq./inf. de cada ojo.
+const IRIS_A = [469, 470, 471, 472] as const;
+const IRIS_B = [474, 475, 476, 477] as const;
+// El recorte de la foto deja ~3% de margen por lado alrededor de la montura.
+const CANVAS_MARGIN_FACTOR = 1.06;
+// Límites de seguridad por si la medición del iris sale mal (muy lejos, borroso).
+const MIN_FRAME_RATIO = 0.7;
+const MAX_FRAME_RATIO = 1.5;
+const FRAME_RATIO_STEP = 0.02;
+// Suavizado del iris (0 = sin suavizar, 1 = congelado): cambia poco entre frames.
+const IRIS_SMOOTHING = 0.9;
 // Fracción de la altura de la imagen de la gafa que queda por ENCIMA del
 // puente nasal (anclaje).
 const BRIDGE_HEIGHT_FRACTION = 0.42;
@@ -80,6 +96,8 @@ export class GlassesRenderer {
   private occluder: THREE.Mesh;
   private parts: GlassesParts | null = null;
   private smoothed: Map<number, V3> = new Map();
+  /** Diámetro del iris en píxeles, suavizado (escala real de la cara). */
+  private irisPx = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     this.renderer = new THREE.WebGLRenderer({
@@ -129,8 +147,22 @@ export class GlassesRenderer {
     this.parts = null;
   }
 
-  private ensureParts(glasses: ProcessedGlasses, scaleAdj: number) {
-    const frontW = FRAME_TO_FACE_RATIO * scaleAdj;
+  /**
+   * Ancho del frente en "anchos de cara". Si la gafa trae su ancho real en
+   * mm y se pudo medir el iris, se usa tamaño real: la misma montura se ve
+   * más pequeña en una cara ancha y más grande en una delgada. Si no, se
+   * ajusta a la cara (FRAME_TO_FACE_RATIO).
+   */
+  private frontWidth(glasses: ProcessedGlasses, scaleAdj: number, faceUnitPx: number) {
+    if (!glasses.frameWidthMm || !this.irisPx) return FRAME_TO_FACE_RATIO * scaleAdj;
+    const pxPerMm = this.irisPx / IRIS_DIAMETER_MM;
+    const canvasMm = glasses.frameWidthMm * CANVAS_MARGIN_FACTOR;
+    const ratio = THREE.MathUtils.clamp((canvasMm * pxPerMm) / faceUnitPx, MIN_FRAME_RATIO, MAX_FRAME_RATIO);
+    // Escalonado: reconstruir la malla solo cuando el tamaño cambia de verdad.
+    return Math.round((ratio * scaleAdj) / FRAME_RATIO_STEP) * FRAME_RATIO_STEP;
+  }
+
+  private ensureParts(glasses: ProcessedGlasses, frontW: number) {
     if (this.parts?.id === glasses.id && this.parts.frontW === frontW && this.parts.templeSrc === glasses.temple)
       return;
     this.clearParts();
@@ -174,6 +206,7 @@ export class GlassesRenderer {
     this.resize(canvasW, canvasH);
     this.renderer.clear();
     this.smoothed.clear();
+    this.irisPx = 0;
   }
 
   private resize(w: number, h: number) {
@@ -255,7 +288,16 @@ export class GlassesRenderer {
     this.head.matrix.makeTranslation(anchor.x, anchor.y, anchor.z).multiply(roll).multiply(basis);
     this.head.matrixWorldNeedsUpdate = true;
 
-    this.ensureParts(glasses, adjustment.scale);
+    // Diámetro del iris: el mayor entre horizontal y vertical (el girar la
+    // cabeza achata uno de los dos), promediando ambos ojos.
+    if (landmarks.length > IRIS_B[3]) {
+      const irisSize = ([right1, top, left1, bottom]: readonly number[]) =>
+        Math.max(p(right1).distanceTo(p(left1)), p(top).distanceTo(p(bottom)));
+      const current = (irisSize(IRIS_A) + irisSize(IRIS_B)) / 2;
+      this.irisPx = this.irisPx ? this.irisPx * IRIS_SMOOTHING + current * (1 - IRIS_SMOOTHING) : current;
+    }
+
+    this.ensureParts(glasses, this.frontWidth(glasses, adjustment.scale, s));
 
     // Las patas son planos (una foto): mirando de frente quedan de canto y se
     // ven como una barra vertical en cada extremo de la montura. Se muestran

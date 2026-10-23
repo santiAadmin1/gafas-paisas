@@ -142,13 +142,25 @@ async function loadPreprocessed(model: CatalogModel): Promise<ProcessedGlasses |
     height: canvas.height,
     thumbnail: thumb.toDataURL("image/png"),
     possiblyUnsegmented: false,
+    frameWidthMm: model.anchoMm,
   };
-  try {
-    result.temple = imageToCanvas(await loadImage(`${PREPROCESSED_DIR}/${model.id}_pata.png`));
-  } catch {
-    // Sin pata preprocesada: el ARRenderer dibuja una pata genérica.
+  if (usesPhotoTemple(model)) {
+    try {
+      result.temple = imageToCanvas(await loadImage(`${PREPROCESSED_DIR}/${model.id}_pata.png`));
+    } catch {
+      // Sin pata preprocesada: el ARRenderer dibuja una pata genérica.
+    }
   }
   return result;
+}
+
+/**
+ * La foto lateral solo se usa si de verdad es la pata de esa montura. Con
+ * emparejamiento de confianza "baja" (foto de otro producto) es mejor una
+ * pata genérica del color de la montura que la pata de otra gafa.
+ */
+function usesPhotoTemple(model: CatalogModel) {
+  return model.parConfianza !== "baja";
 }
 
 /**
@@ -171,7 +183,8 @@ export async function processCatalogModel(model: CatalogModel): Promise<Processe
 export async function processCatalogModelFromOriginals(model: CatalogModel): Promise<ProcessedGlasses> {
   const frontFile = await urlToFile(model.frontal, `${model.id}_frontal.png`);
   const base = await processGlassesImage(frontFile);
-  const result: ProcessedGlasses = { ...base, id: model.id, name: model.name };
+  const result: ProcessedGlasses = { ...base, id: model.id, name: model.name, frameWidthMm: model.anchoMm };
+  if (!usesPhotoTemple(model)) return result;
 
   try {
     const sideFile = await urlToFile(model.lateral, `${model.id}_lateral.png`);

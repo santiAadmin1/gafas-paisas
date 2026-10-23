@@ -27,7 +27,20 @@ export type ProcessedGlasses = {
    * genérica del color de la montura.
    */
   temple?: HTMLCanvasElement;
+  /**
+   * Ancho real del frente de la montura en mm (opcional). Con él, el
+   * ARRenderer dibuja la gafa a tamaño real según la cara; sin él (fotos
+   * subidas por el usuario), la ajusta al ancho de la cara.
+   */
+  frameWidthMm?: number;
 };
+
+/**
+ * Alpha promedio (0–255) que deja la IA en una zona encerrada por la montura
+ * por encima del cual esa zona es montura clara y no un lente transparente.
+ * Medido: puente blanco GP-10/GP-11 ≈ 63–106; lente transparente GP-16 ≈ 1–2.
+ */
+const FRAME_NOT_LENS_ALPHA = 30;
 
 function colorDistance(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number) {
   return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
@@ -396,10 +409,27 @@ function fillLensHoles(
     if (area < minArea) {
       // hueco pequeño (ej. entre bisagras): se deja como lo dejó la IA
       for (let k = 0; k < area; k++) hole[queue[k]] = 2;
+      continue;
+    }
+    // Montura clara (blanca/marfil) sobre fondo claro: la IA la deja a medio
+    // camino (alpha ~60–110) en vez de borrarla como a un lente transparente
+    // (alpha ~0). Esa zona es montura: se devuelve opaca con su color real.
+    let alphaSum = 0;
+    for (let k = 0; k < area; k++) alphaSum += data[queue[k] * 4 + 3];
+    if (alphaSum / area > FRAME_NOT_LENS_ALPHA) {
+      for (let k = 0; k < area; k++) hole[queue[k]] = 3;
     }
   }
 
   for (let i = 0; i < total; i++) {
+    if (hole[i] === 3) {
+      const p = i * 4;
+      data[p] = orig[p];
+      data[p + 1] = orig[p + 1];
+      data[p + 2] = orig[p + 2];
+      data[p + 3] = 255;
+      continue;
+    }
     if (hole[i] !== 1) continue;
     const p = i * 4;
     const r = orig[p],
