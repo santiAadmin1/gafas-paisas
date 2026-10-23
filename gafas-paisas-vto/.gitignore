@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Fotos originales de la TANDA 2 (solo para preprocesar en el PC; pesan ~228 MB)
+/public/catalogo/_t2src/

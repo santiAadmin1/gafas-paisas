@@ -163,7 +163,16 @@ function floodFillBackground(
   }
 }
 
-export async function processGlassesImage(file: File): Promise<ProcessedGlasses> {
+export type ProcessOptions = {
+  /**
+   * Lentes claros/grises casi del color del fondo: la IA los borra a pedazos
+   * (un lente sí y otro no). Con esta opción, todo lo claro que la montura
+   * encierra se rehace como vidrio parejo.
+   */
+  clearLenses?: boolean;
+};
+
+export async function processGlassesImage(file: File, options: ProcessOptions = {}): Promise<ProcessedGlasses> {
   // Segmentación real por IA (modelo isnet corriendo en el navegador vía
   // WASM, sin backend): separa la montura del fondo aunque sean del mismo
   // tono (estuches, sombras, texturas) — el chroma-key nunca puede hacer
@@ -228,6 +237,7 @@ export async function processGlassesImage(file: File): Promise<ProcessedGlasses>
       const origData = octx.getImageData(0, 0, width, height).data;
       restoreSolidRegions(data, origData, width, height);
       fillLensHoles(data, origData, width, height);
+      if (options.clearLenses) unifyClearLenses(data, origData, width, height);
     }
     if (orig) URL.revokeObjectURL(orig.src);
   }
@@ -441,6 +451,64 @@ function fillLensHoles(
     data[p + 1] = un(g);
     data[p + 2] = un(b);
     data[p + 3] = Math.round(a * 255);
+  }
+}
+
+/** Color del vidrio a partir del píxel original sobre fondo claro (ver fillLensHoles). */
+function glassFromOriginal(data: Uint8ClampedArray, orig: Uint8ClampedArray, p: number) {
+  const r = orig[p],
+    g = orig[p + 1],
+    b = orig[p + 2];
+  const a = Math.min(0.92, Math.max(0.35, (1 - Math.min(r, g, b) / 255) * 1.1));
+  const un = (c: number) => Math.max(0, Math.min(255, (c - 255 * (1 - a)) / a));
+  data[p] = un(r);
+  data[p + 1] = un(g);
+  data[p + 2] = un(b);
+  data[p + 3] = Math.round(a * 255);
+}
+
+/**
+ * Lentes claros: en la foto original, todo píxel claro y neutro (gris/blanco)
+ * que NO está conectado al borde por píxeles claros está encerrado por la
+ * montura → es lente. Se rehace como vidrio parejo, sin importar lo que haya
+ * dejado la IA en cada pedazo.
+ */
+function unifyClearLenses(data: Uint8ClampedArray, orig: Uint8ClampedArray, width: number, height: number) {
+  const total = width * height;
+  const light = (idx: number) => {
+    const p = idx * 4;
+    const mx = Math.max(orig[p], orig[p + 1], orig[p + 2]);
+    const mn = Math.min(orig[p], orig[p + 1], orig[p + 2]);
+    return mn > 170 && mx - mn < 30;
+  };
+  const outside = new Uint8Array(total);
+  const queue = new Int32Array(total);
+  let head = 0,
+    tail = 0;
+  const seed = (idx: number) => {
+    if (!outside[idx] && light(idx)) {
+      outside[idx] = 1;
+      queue[tail++] = idx;
+    }
+  };
+  for (let x = 0; x < width; x++) {
+    seed(x);
+    seed((height - 1) * width + x);
+  }
+  for (let y = 0; y < height; y++) {
+    seed(y * width);
+    seed(y * width + width - 1);
+  }
+  while (head < tail) {
+    const idx = queue[head++];
+    const x = idx % width;
+    if (x > 0) seed(idx - 1);
+    if (x < width - 1) seed(idx + 1);
+    if (idx >= width) seed(idx - width);
+    if (idx < total - width) seed(idx + width);
+  }
+  for (let i = 0; i < total; i++) {
+    if (!outside[i] && light(i)) glassFromOriginal(data, orig, i * 4);
   }
 }
 

@@ -182,14 +182,14 @@ export async function processCatalogModel(model: CatalogModel): Promise<Processe
  */
 export async function processCatalogModelFromOriginals(model: CatalogModel): Promise<ProcessedGlasses> {
   const frontFile = await urlToFile(model.frontal, `${model.id}_frontal.png`);
-  const base = await processGlassesImage(frontFile);
+  const base = await processGlassesImage(frontFile, { clearLenses: model.lenteClara });
   const result: ProcessedGlasses = { ...base, id: model.id, name: model.name, frameWidthMm: model.anchoMm };
   if (!usesPhotoTemple(model)) return result;
 
   try {
     const sideFile = await urlToFile(model.lateral, `${model.id}_lateral.png`);
     const side = await processGlassesImage(sideFile);
-    result.temple = cropProfileToTemple(side.canvas, model.pataInicio);
+    result.temple = model.lateralEsPata ? side.canvas : cropProfileToTemple(side.canvas, model.pataInicio);
   } catch (e) {
     // Sin pata: el ARRenderer dibuja una pata genérica del color de la montura.
     console.warn(`[loadCatalog] No se pudo procesar la pata de ${model.id}:`, e);
