@@ -19,6 +19,7 @@ export function CapturePreview({
   favoritesFull,
 }: Props) {
   const [sharing, setSharing] = useState(false);
+  const [shareError, setShareError] = useState("");
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/95 p-4 text-white">
@@ -44,8 +45,11 @@ export function CapturePreview({
         <button
           onClick={async () => {
             setSharing(true);
+            setShareError("");
             try {
-              await shareCaptureToWhatsapp(captureDataUrl);
+              await shareCaptureToWhatsapp(captureDataUrl, glassesName);
+            } catch (error) {
+              setShareError(error instanceof Error ? error.message : "No pudimos abrir la consulta. Intenta de nuevo.");
             } finally {
               setSharing(false);
             }
@@ -56,6 +60,7 @@ export function CapturePreview({
           {sharing ? "Abriendo…" : "Quiero estas gafas 💬"}
         </button>
       </div>
+      {shareError && <p role="alert" className="pt-3 text-center text-sm text-red-300">{shareError}</p>}
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { WHATSAPP_INTEREST_MESSAGE, WHATSAPP_NUMBER } from "./constants";
+import { WHATSAPP_NUMBER } from "./constants";
+import { requestConsultation } from "./consultationClient.js";
 
 function dataUrlToFile(dataUrl: string, filename: string): File {
   const [header, base64] = dataUrl.split(",");
@@ -23,8 +24,10 @@ function whatsappLink(message: string) {
  */
 export async function shareCaptureToWhatsapp(
   captureDataUrl: string,
-  message: string = WHATSAPP_INTEREST_MESSAGE
+  reference: string,
 ) {
+  const consultation = await requestConsultation(reference);
+  const message = new URL(consultation.whatsappUrl).searchParams.get("text")!;
   const file = dataUrlToFile(captureDataUrl, "gafas-paisas-prueba.png");
 
   if (
@@ -36,13 +39,16 @@ export async function shareCaptureToWhatsapp(
     try {
       await navigator.share({ files: [file], text: message, title: "Gafas Paisas" });
       return { method: "native-share" as const };
-    } catch {
-      // El usuario canceló o falló: seguimos con el respaldo.
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return { method: "cancelled" as const };
+      }
+      // Si falla el envío nativo, continúa con el respaldo preparado por la API.
     }
   }
 
   downloadDataUrl(captureDataUrl, "gafas-paisas-prueba.png");
-  window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
+  window.open(consultation.whatsappUrl, "_blank", "noopener,noreferrer");
   return { method: "download-and-link" as const };
 }
 
