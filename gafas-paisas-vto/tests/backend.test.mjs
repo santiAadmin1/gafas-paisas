@@ -46,6 +46,15 @@ test("enforces body size using actual bytes", async () => {
   assert.equal((await POST(new Request("http://localhost/api/consultations", { method: "POST", headers: { "Content-Type": "application/json", "Content-Length": "1" }, body: JSON.stringify({ reference: "é".repeat(600) }) }))).status, 413);
 });
 
+test("rejects a body whose declared size exceeds the limit", async () => {
+  const response = await POST(new Request("http://localhost/api/consultations", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Content-Length": "1025" },
+    body: "{}",
+  }));
+  assert.equal(response.status, 413);
+});
+
 test("cancels an overflowing chunked stream", async () => {
   let cancelled = false;
   const stream = new ReadableStream({ start(c) { c.enqueue(new Uint8Array(600)); c.enqueue(new Uint8Array(600)); }, cancel() { cancelled = true; } });

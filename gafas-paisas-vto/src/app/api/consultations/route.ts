@@ -11,6 +11,11 @@ export async function POST(request: Request) {
   const mediaType = request.headers.get("content-type")?.split(";")[0].trim().toLowerCase();
   if (mediaType !== "application/json") return json({ error: "Envía la consulta como application/json." }, 415);
 
+  const contentLength = request.headers.get("content-length");
+  if (contentLength && /^\d+$/.test(contentLength) && Number(contentLength) > MAX_BODY_BYTES) {
+    return json({ error: "La consulta supera 1024 bytes." }, 413);
+  }
+
   const reader = request.body?.getReader();
   if (!reader) return json({ error: "La consulta está vacía." }, 400);
   const bytes = new Uint8Array(MAX_BODY_BYTES);

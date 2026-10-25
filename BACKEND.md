@@ -15,7 +15,7 @@ La vista de captura consume `POST /api/consultations` antes de compartir. Valida
 
 El cliente cancela la solicitud después de ocho segundos, incluso si la respuesta comenzó pero su cuerpo no termina de llegar, y muestra un mensaje recuperable. En favoritas se bloquean temporalmente todos los botones de compra mientras una consulta está en curso, evitando solicitudes y ventanas duplicadas.
 
-La referencia admite 1–120 unidades UTF-16, Unicode bien formado y ningún carácter de control. Solo se admite ese campo. El cuerpo se limita a 1024 bytes reales y cinco segundos de lectura. Las respuestas usan `Cache-Control: no-store`.
+La referencia admite 1–120 unidades UTF-16, Unicode bien formado y ningún carácter de control. Solo se admite ese campo. El cuerpo se limita a 1024 bytes reales y cinco segundos de lectura. Si `Content-Length` ya declara un exceso, se rechaza antes de leer el flujo; declarar un valor menor no evita la comprobación de bytes reales. Las respuestas usan `Cache-Control: no-store`.
 
 ## Verificación
 
