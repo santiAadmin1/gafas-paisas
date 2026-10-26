@@ -85,7 +85,7 @@ test("client accepts only a valid consultation response", async () => {
     return Response.json({
       status: "ready_to_contact",
       reference: "Montura azul",
-      whatsappUrl: "https://wa.me/573000000000?text=Consulta%20segura",
+      whatsappUrl: "https://wa.me/573000000000?text=Consulta%20segura%3A%20Montura%20azul",
     });
   };
   const result = await requestConsultation("Montura azul", fetcher);
@@ -100,6 +100,9 @@ test("client preserves API errors and rejects malformed or foreign links", async
   for (const body of [
     null,
     {},
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: "no-es-una-url" },
+    { status: "ready_to_contact", reference: "Otra montura", whatsappUrl: "https://wa.me/573000000000?text=Montura" },
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://wa.me/573000000000?text=Otra%20referencia" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://evil.example/573000000000?text=x" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "http://wa.me/573000000000?text=x" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://wa.me/+573000000000?text=x" },
@@ -154,7 +157,7 @@ test("client clears its deadline after a completed response", async () => {
     return Response.json({
       status: "ready_to_contact",
       reference: "Montura rápida",
-      whatsappUrl: "https://wa.me/573000000000?text=Consulta",
+      whatsappUrl: "https://wa.me/573000000000?text=Consulta%3A%20Montura%20rápida",
     });
   }, 20);
   assert.equal(result.reference, "Montura rápida");

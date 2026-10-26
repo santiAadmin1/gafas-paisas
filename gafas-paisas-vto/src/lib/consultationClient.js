@@ -1,6 +1,7 @@
 const DEFAULT_TIMEOUT_MS = 8000;
 
 export async function requestConsultation(reference, fetcher = fetch, timeoutMs = DEFAULT_TIMEOUT_MS) {
+  const expectedReference = reference.trim();
   const controller = new AbortController();
   let timedOut = false;
   const timer = setTimeout(() => {
@@ -36,8 +37,20 @@ export async function requestConsultation(reference, fetcher = fetch, timeoutMs 
   if (body.status !== "ready_to_contact" || typeof body.reference !== "string" || typeof body.whatsappUrl !== "string") {
     throw new Error("La respuesta de consulta no es válida.");
   }
-  const url = new URL(body.whatsappUrl);
-  if (url.protocol !== "https:" || url.hostname !== "wa.me" || !/^\/[1-9]\d{7,14}$/.test(url.pathname) || !url.searchParams.get("text")) {
+  let url;
+  try {
+    url = new URL(body.whatsappUrl);
+  } catch {
+    throw new Error("El canal de consulta recibido no es válido.");
+  }
+  const message = url.searchParams.get("text");
+  if (
+    body.reference !== expectedReference
+    || url.protocol !== "https:"
+    || url.hostname !== "wa.me"
+    || !/^\/[1-9]\d{7,14}$/.test(url.pathname)
+    || !message?.includes(expectedReference)
+  ) {
     throw new Error("El canal de consulta recibido no es válido.");
   }
   return body;
