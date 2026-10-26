@@ -1,0 +1,9 @@
+# Configuración de Netlify: la app Next.js vive en gafas-paisas-vto/.
+# Netlify detecta Next.js y aplica su adaptador automáticamente.
+[build]
+  base = "gafas-paisas-vto"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
