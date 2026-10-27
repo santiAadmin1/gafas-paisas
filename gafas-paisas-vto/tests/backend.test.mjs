@@ -112,6 +112,31 @@ test("client preserves API errors and rejects malformed or foreign links", async
   }
 });
 
+test("client rejects oversized responses by declared and actual bytes", async () => {
+  await assert.rejects(
+    requestConsultation("Montura", async () => new Response("{}", {
+      headers: { "Content-Type": "application/json", "Content-Length": "4097" },
+    })),
+    /supera el tamaño permitido/,
+  );
+
+  let cancelled = false;
+  const stream = new ReadableStream({
+    start(controller) {
+      controller.enqueue(new Uint8Array(3000));
+      controller.enqueue(new Uint8Array(3000));
+    },
+    cancel() {
+      cancelled = true;
+    },
+  });
+  await assert.rejects(
+    requestConsultation("Montura", async () => new Response(stream, { headers: { "Content-Type": "application/json" } })),
+    /supera el tamaño permitido/,
+  );
+  assert.equal(cancelled, true);
+});
+
 test("client aborts a consultation that exceeds its deadline", async () => {
   let observedSignal;
   const hangingFetcher = async (_url, init) => {

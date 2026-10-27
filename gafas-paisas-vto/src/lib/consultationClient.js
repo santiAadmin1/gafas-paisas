@@ -1,4 +1,35 @@
 const DEFAULT_TIMEOUT_MS = 8000;
+const MAX_RESPONSE_BYTES = 4096;
+
+async function readJsonResponse(response) {
+  const contentLength = response.headers.get("content-length");
+  if (contentLength && /^\d+$/.test(contentLength) && Number(contentLength) > MAX_RESPONSE_BYTES) {
+    throw new Error("La respuesta de consulta supera el tamaño permitido.");
+  }
+  const reader = response.body?.getReader();
+  if (!reader) return null;
+  const bytes = new Uint8Array(MAX_RESPONSE_BYTES);
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (size + value.byteLength > MAX_RESPONSE_BYTES) {
+        void reader.cancel().catch(() => {});
+        throw new Error("La respuesta de consulta supera el tamaño permitido.");
+      }
+      bytes.set(value, size);
+      size += value.byteLength;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  try {
+    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes.subarray(0, size)));
+  } catch {
+    return null;
+  }
+}
 
 export async function requestConsultation(reference, fetcher = fetch, timeoutMs = DEFAULT_TIMEOUT_MS) {
   const expectedReference = reference.trim();
@@ -17,10 +48,7 @@ export async function requestConsultation(reference, fetcher = fetch, timeoutMs 
       body: JSON.stringify({ reference }),
       signal: controller.signal,
     });
-    body = await response.json().catch((error) => {
-      if (timedOut) throw error;
-      return null;
-    });
+    body = await readJsonResponse(response);
   } catch (error) {
     if (timedOut) throw new Error("La consulta tardó demasiado. Revisa tu conexión e intenta de nuevo.");
     throw error;
