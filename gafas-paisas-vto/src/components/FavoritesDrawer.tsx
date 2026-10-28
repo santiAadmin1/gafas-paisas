@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { shareCaptureToWhatsapp } from "@/lib/shareController";
 import type { Favorite } from "@/hooks/useSession";
 
@@ -10,6 +11,8 @@ type Props = {
 };
 
 export function FavoritesDrawer({ favorites, onClose, onRemove }: Props) {
+  const [shareError, setShareError] = useState("");
+  const [sharingId, setSharingId] = useState<string | null>(null);
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/95 p-4 text-white">
       <div className="flex items-center justify-between pb-4">
@@ -35,10 +38,22 @@ export function FavoritesDrawer({ favorites, onClose, onRemove }: Props) {
               />
               <span className="truncate text-xs text-white/70">{fav.glassesName}</span>
               <button
-                onClick={() => shareCaptureToWhatsapp(fav.capture)}
-                className="rounded-full bg-brand-blue py-2 text-xs font-semibold"
+                onClick={async () => {
+                  if (sharingId) return;
+                  setShareError("");
+                  setSharingId(fav.id);
+                  try {
+                    await shareCaptureToWhatsapp(fav.capture, fav.glassesName);
+                  } catch (error) {
+                    setShareError(error instanceof Error ? error.message : "No pudimos abrir la consulta.");
+                  } finally {
+                    setSharingId(null);
+                  }
+                }}
+                disabled={sharingId !== null}
+                className="rounded-full bg-brand-blue py-2 text-xs font-semibold disabled:opacity-60"
               >
-                Comprar esta
+                {sharingId === fav.id ? "Abriendo…" : "Comprar esta"}
               </button>
               <button
                 onClick={() => onRemove(fav.id)}
@@ -50,6 +65,7 @@ export function FavoritesDrawer({ favorites, onClose, onRemove }: Props) {
           ))}
         </div>
       )}
+      {shareError && <p role="alert" className="pt-3 text-center text-sm text-red-300">{shareError}</p>}
     </div>
   );
 }
