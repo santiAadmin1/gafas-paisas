@@ -137,6 +137,15 @@ test("client rejects oversized responses by declared and actual bytes", async ()
   assert.equal(cancelled, true);
 });
 
+test("client converts network failures into a recoverable message", async () => {
+  for (const failure of [new TypeError("Failed to fetch"), new DOMException("Aborted", "AbortError")]) {
+    await assert.rejects(
+      requestConsultation("Montura", async () => { throw failure; }),
+      /No pudimos conectar con el canal de consultas/,
+    );
+  }
+});
+
 test("client aborts a consultation that exceeds its deadline", async () => {
   let observedSignal;
   const hangingFetcher = async (_url, init) => {

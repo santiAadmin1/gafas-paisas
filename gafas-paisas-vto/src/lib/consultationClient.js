@@ -51,6 +51,9 @@ export async function requestConsultation(reference, fetcher = fetch, timeoutMs 
     body = await readJsonResponse(response);
   } catch (error) {
     if (timedOut) throw new Error("La consulta tardó demasiado. Revisa tu conexión e intenta de nuevo.");
+    if (error instanceof TypeError || (error instanceof DOMException && error.name === "AbortError")) {
+      throw new Error("No pudimos conectar con el canal de consultas. Revisa tu conexión e intenta de nuevo.");
+    }
     throw error;
   } finally {
     clearTimeout(timer);
