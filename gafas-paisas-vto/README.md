@@ -20,6 +20,26 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Probador virtual — Catálogo Gafas Paisas
+
+Esta app es un probador virtual (AR) de gafas. El catálogo de monturas está
+integrado desde `src/lib/catalog.ts` (16 referencias, TANDA 1). Ver
+**[CATALOGO.md](./CATALOGO.md)** para operar el catálogo (agregar modelos,
+emparejar pata, alias, pedido por WhatsApp y limitaciones conocidas).
+
+Chequeos:
+
+```bash
+node scripts/check-catalog.mjs   # integridad del catálogo
+npm run lint
+npm run build                    # typecheck + build
+```
+
+> **Validación manual pendiente:** el calce real de las gafas depende de la
+> cámara y del face-tracking (MediaPipe), que no se pueden verificar sin
+> dispositivo. Probar en `npm run dev` con cámara: selección de modelo, calce,
+> cambio entre referencias, ajuste manual (🔧) y botón "Pedir por WhatsApp".
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

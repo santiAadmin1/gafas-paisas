@@ -1,0 +1,9 @@
+# Configuración de Netlify (base directory del sitio: gafas-paisas-vto).
+# La app se exporta como sitio estático (output: "export" en next.config.ts)
+# a out/, que se publica tal cual.
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"

@@ -1,13 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050608;
+  --background: #06162f;
   --foreground: #ffffff;
-  --brand-blue: #0b5fdb;
-  --brand-blue-dark: #073e94;
-  --brand-black: #0a0a0f;
+  --brand-blue: #0669e6;
+  --brand-blue-dark: #0053c2;
+  --brand-black: #06162f;
 }
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -17,17 +16,14 @@
   --font-sans: "Poppins", Arial, Helvetica, sans-serif;
   --font-script: "Dancing Script", cursive;
 }
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  overscroll-behavior: none;
-}
-
-/* Evita el menú contextual / selección al usar la app como una cámara */
-.no-select {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
+html, body { min-height: 100%; }
+body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); overscroll-behavior: none; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 3px solid #98ceff; outline-offset: 3px; }
+.no-select { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.gp-hero-glow { background: radial-gradient(ellipse at 74% 34%,rgba(18,108,229,.56) 0%,rgba(13,69,148,.38) 28%,rgba(6,22,47,0) 68%),linear-gradient(135deg,#0b2b53 0%,#071a36 56%,#050e22 100%); }
+.gp-glasses-art { background: radial-gradient(ellipse at 50% 40%,rgba(34,126,241,.26) 0%,rgba(4,39,91,.5) 55%,rgba(2,21,48,.56) 100%); }
+@media (prefers-reduced-motion: reduce) {
+ *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }

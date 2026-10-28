@@ -27,7 +27,20 @@ export type ProcessedGlasses = {
    * genérica del color de la montura.
    */
   temple?: HTMLCanvasElement;
+  /**
+   * Ancho real del frente de la montura en mm (opcional). Con él, el
+   * ARRenderer dibuja la gafa a tamaño real según la cara; sin él (fotos
+   * subidas por el usuario), la ajusta al ancho de la cara.
+   */
+  frameWidthMm?: number;
 };
+
+/**
+ * Alpha promedio (0–255) que deja la IA en una zona encerrada por la montura
+ * por encima del cual esa zona es montura clara y no un lente transparente.
+ * Medido: puente blanco GP-10/GP-11 ≈ 63–106; lente transparente GP-16 ≈ 1–2.
+ */
+const FRAME_NOT_LENS_ALPHA = 30;
 
 function colorDistance(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number) {
   return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
@@ -150,7 +163,16 @@ function floodFillBackground(
   }
 }
 
-export async function processGlassesImage(file: File): Promise<ProcessedGlasses> {
+export type ProcessOptions = {
+  /**
+   * Lentes claros/grises casi del color del fondo: la IA los borra a pedazos
+   * (un lente sí y otro no). Con esta opción, todo lo claro que la montura
+   * encierra se rehace como vidrio parejo.
+   */
+  clearLenses?: boolean;
+};
+
+export async function processGlassesImage(file: File, options: ProcessOptions = {}): Promise<ProcessedGlasses> {
   // Segmentación real por IA (modelo isnet corriendo en el navegador vía
   // WASM, sin backend): separa la montura del fondo aunque sean del mismo
   // tono (estuches, sombras, texturas) — el chroma-key nunca puede hacer
@@ -212,7 +234,10 @@ export async function processGlassesImage(file: File): Promise<ProcessedGlasses>
       oc.height = height;
       const octx = oc.getContext("2d")!;
       octx.drawImage(orig, 0, 0);
-      fillLensHoles(data, octx.getImageData(0, 0, width, height).data, width, height);
+      const origData = octx.getImageData(0, 0, width, height).data;
+      restoreSolidRegions(data, origData, width, height);
+      fillLensHoles(data, origData, width, height);
+      if (options.clearLenses) unifyClearLenses(data, origData, width, height);
     }
     if (orig) URL.revokeObjectURL(orig.src);
   }
@@ -297,6 +322,47 @@ export async function processGlassesImage(file: File): Promise<ProcessedGlasses>
 }
 
 /**
+ * Devuelve lo que la IA borró de más: lentes de color/espejados que no
+ * quedan encerrados por la montura (ej. gafas deportivas de un solo lente,
+ * que sobresale por los lados) y que `fillLensHoles` no puede recuperar.
+ * Se restaura todo píxel que NO está conectado al fondo (flood-fill por
+ * color sobre la foto original) y cuyo color se aleja claramente del fondo.
+ * Los lentes transparentes (del color del fondo) no se tocan: esos los
+ * maneja `fillLensHoles`.
+ */
+function restoreSolidRegions(
+  data: Uint8ClampedArray,
+  orig: Uint8ClampedArray,
+  width: number,
+  height: number
+) {
+  const mask = orig.slice();
+  const bgRef = estimateBorderColor(mask, width, height);
+  floodFillBackground(mask, width, height, 26, bgRef, 90);
+
+  const total = width * height;
+  let removed = 0;
+  for (let i = 3; i < mask.length; i += 4) if (mask[i] === 0) removed++;
+  // Si el fondo no se pudo separar por color (fondo con textura, escena
+  // real), restaurar traería de vuelta parte del fondo: mejor confiar en la IA.
+  // (Umbral bajo: en gafas deportivas que llenan la foto el fondo es ~30%.)
+  if (removed < total * 0.15) return;
+
+  for (let i = 0; i < total; i++) {
+    const p = i * 4;
+    if (mask[p + 3] === 0 || data[p + 3] === 255) continue;
+    const r = orig[p],
+      g = orig[p + 1],
+      b = orig[p + 2];
+    if (colorDistance(r, g, b, bgRef.r, bgRef.g, bgRef.b) < 60) continue;
+    data[p] = r;
+    data[p + 1] = g;
+    data[p + 2] = b;
+    data[p + 3] = 255;
+  }
+}
+
+/**
  * Rellena los "huecos" encerrados por la montura (los lentes) como vidrio
  * tintado semitransparente. Un hueco = zona no opaca que NO está conectada
  * con el borde de la imagen. El color/alpha del vidrio se obtiene
@@ -353,10 +419,27 @@ function fillLensHoles(
     if (area < minArea) {
       // hueco pequeño (ej. entre bisagras): se deja como lo dejó la IA
       for (let k = 0; k < area; k++) hole[queue[k]] = 2;
+      continue;
+    }
+    // Montura clara (blanca/marfil) sobre fondo claro: la IA la deja a medio
+    // camino (alpha ~60–110) en vez de borrarla como a un lente transparente
+    // (alpha ~0). Esa zona es montura: se devuelve opaca con su color real.
+    let alphaSum = 0;
+    for (let k = 0; k < area; k++) alphaSum += data[queue[k] * 4 + 3];
+    if (alphaSum / area > FRAME_NOT_LENS_ALPHA) {
+      for (let k = 0; k < area; k++) hole[queue[k]] = 3;
     }
   }
 
   for (let i = 0; i < total; i++) {
+    if (hole[i] === 3) {
+      const p = i * 4;
+      data[p] = orig[p];
+      data[p + 1] = orig[p + 1];
+      data[p + 2] = orig[p + 2];
+      data[p + 3] = 255;
+      continue;
+    }
     if (hole[i] !== 1) continue;
     const p = i * 4;
     const r = orig[p],
@@ -368,6 +451,64 @@ function fillLensHoles(
     data[p + 1] = un(g);
     data[p + 2] = un(b);
     data[p + 3] = Math.round(a * 255);
+  }
+}
+
+/** Color del vidrio a partir del píxel original sobre fondo claro (ver fillLensHoles). */
+function glassFromOriginal(data: Uint8ClampedArray, orig: Uint8ClampedArray, p: number) {
+  const r = orig[p],
+    g = orig[p + 1],
+    b = orig[p + 2];
+  const a = Math.min(0.92, Math.max(0.35, (1 - Math.min(r, g, b) / 255) * 1.1));
+  const un = (c: number) => Math.max(0, Math.min(255, (c - 255 * (1 - a)) / a));
+  data[p] = un(r);
+  data[p + 1] = un(g);
+  data[p + 2] = un(b);
+  data[p + 3] = Math.round(a * 255);
+}
+
+/**
+ * Lentes claros: en la foto original, todo píxel claro y neutro (gris/blanco)
+ * que NO está conectado al borde por píxeles claros está encerrado por la
+ * montura → es lente. Se rehace como vidrio parejo, sin importar lo que haya
+ * dejado la IA en cada pedazo.
+ */
+function unifyClearLenses(data: Uint8ClampedArray, orig: Uint8ClampedArray, width: number, height: number) {
+  const total = width * height;
+  const light = (idx: number) => {
+    const p = idx * 4;
+    const mx = Math.max(orig[p], orig[p + 1], orig[p + 2]);
+    const mn = Math.min(orig[p], orig[p + 1], orig[p + 2]);
+    return mn > 170 && mx - mn < 30;
+  };
+  const outside = new Uint8Array(total);
+  const queue = new Int32Array(total);
+  let head = 0,
+    tail = 0;
+  const seed = (idx: number) => {
+    if (!outside[idx] && light(idx)) {
+      outside[idx] = 1;
+      queue[tail++] = idx;
+    }
+  };
+  for (let x = 0; x < width; x++) {
+    seed(x);
+    seed((height - 1) * width + x);
+  }
+  for (let y = 0; y < height; y++) {
+    seed(y * width);
+    seed(y * width + width - 1);
+  }
+  while (head < tail) {
+    const idx = queue[head++];
+    const x = idx % width;
+    if (x > 0) seed(idx - 1);
+    if (x < width - 1) seed(idx + 1);
+    if (idx >= width) seed(idx - width);
+    if (idx < total - width) seed(idx + width);
+  }
+  for (let i = 0; i < total; i++) {
+    if (!outside[i] && light(i)) glassFromOriginal(data, orig, i * 4);
   }
 }
 

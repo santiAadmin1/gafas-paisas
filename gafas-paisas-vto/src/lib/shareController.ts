@@ -46,6 +46,25 @@ export async function shareCaptureToWhatsapp(
   return { method: "download-and-link" as const };
 }
 
+/**
+ * Guarda la captura en la galería del celular. Los navegadores no pueden
+ * escribir directo en Fotos: en iPhone/Android se abre la hoja nativa de
+ * compartir (solo con la imagen, sin texto) donde aparece "Guardar imagen".
+ * Sin Web Share (computador), se descarga el archivo.
+ */
+export async function saveCaptureToGallery(captureDataUrl: string) {
+  const file = dataUrlToFile(captureDataUrl, "gafas-paisas-mi-look.png");
+  if (typeof navigator !== "undefined" && "canShare" in navigator && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file] });
+    } catch {
+      // El usuario cerró la hoja de compartir: no hacemos nada más.
+    }
+    return;
+  }
+  downloadDataUrl(captureDataUrl, "gafas-paisas-mi-look.png");
+}
+
 export function downloadDataUrl(dataUrl: string, filename: string) {
   const a = document.createElement("a");
   a.href = dataUrl;
