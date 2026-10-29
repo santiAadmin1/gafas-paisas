@@ -1,3 +1,5 @@
+import { buildConsultationMessage } from "./consultationMessage.js";
+
 const DEFAULT_TIMEOUT_MS = 8000;
 const MAX_RESPONSE_BYTES = 4096;
 
@@ -80,7 +82,7 @@ export async function requestConsultation(reference, fetcher = fetch, timeoutMs 
     || url.protocol !== "https:"
     || url.hostname !== "wa.me"
     || !/^\/[1-9]\d{7,14}$/.test(url.pathname)
-    || !message?.includes(expectedReference)
+    || message !== buildConsultationMessage(expectedReference)
   ) {
     throw new Error("El canal de consulta recibido no es válido.");
   }

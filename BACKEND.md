@@ -11,7 +11,7 @@ Definir `WHATSAPP_BUSINESS_NUMBER` en `gafas-paisas-vto/.env.local`: número com
 - `GET /api/health`: devuelve 200 y `status: ok` cuando el canal está configurado; devuelve 503 y `status: degraded` cuando falta. Nunca expone el número.
 - `POST /api/consultations`: recibe JSON `{ "reference": "Montura negra" }` y prepara un enlace de WhatsApp. No envía mensajes, guarda fotos, comprueba inventario, registra pedidos ni confirma compras.
 
-La vista de captura consume `POST /api/consultations` antes de compartir. Valida que la respuesta corresponda a la referencia solicitada, que el mensaje la incluya y que el enlace apunte por HTTPS a `wa.me`; muestra los errores del backend al usuario y evita abrir WhatsApp si la configuración falta o la respuesta no es confiable. Cancelar la hoja nativa de compartir tampoco activa el respaldo de descarga.
+La vista de captura consume `POST /api/consultations` antes de compartir. Valida que la respuesta corresponda a la referencia solicitada, que el mensaje coincida exactamente con la plantilla compartida y que el enlace apunte por HTTPS a `wa.me`; muestra los errores del backend al usuario y evita abrir WhatsApp si la configuración falta o la respuesta no es confiable. Cancelar la hoja nativa de compartir tampoco activa el respaldo de descarga.
 
 El cliente cancela la solicitud después de ocho segundos, incluso si la respuesta comenzó pero su cuerpo no termina de llegar, limita la respuesta a 4096 bytes reales y convierte fallos de red en un mensaje recuperable. En favoritas se bloquean temporalmente todos los botones de compra mientras una consulta está en curso, evitando solicitudes y ventanas duplicadas.
 

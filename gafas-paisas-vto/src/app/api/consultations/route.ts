@@ -1,4 +1,5 @@
 import { getWhatsappBusinessNumber } from "../../../lib/serverConfig.js";
+import { buildConsultationMessage } from "../../../lib/consultationMessage.js";
 
 const MAX_BODY_BYTES = 1024;
 const BODY_TIMEOUT_MS = 5000;
@@ -64,6 +65,6 @@ export async function POST(request: Request) {
 
   const number = getWhatsappBusinessNumber();
   if (!number) return json({ error: "El canal de consultas no está configurado." }, 503);
-  const message = `Hola Gafas Paisas, probé esta referencia virtualmente y quiero consultar disponibilidad. Referencia: ${reference}`;
+  const message = buildConsultationMessage(reference);
   return json({ status: "ready_to_contact", reference, whatsappUrl: `https://wa.me/${number}?text=${encodeURIComponent(message)}` });
 }

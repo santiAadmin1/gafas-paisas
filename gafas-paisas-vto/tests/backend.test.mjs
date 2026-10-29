@@ -5,6 +5,7 @@ import { GET } from "../src/app/api/health/route.ts";
 import { requestConsultation } from "../src/lib/consultationClient.js";
 
 const originalNumber = process.env.WHATSAPP_BUSINESS_NUMBER;
+const messageFor = (reference) => `Hola Gafas Paisas, probé esta referencia virtualmente y quiero consultar disponibilidad. Referencia: ${reference}`;
 after(() => originalNumber === undefined ? delete process.env.WHATSAPP_BUSINESS_NUMBER : process.env.WHATSAPP_BUSINESS_NUMBER = originalNumber);
 const request = (body, type = "application/json") => new Request("http://localhost/api/consultations", { method: "POST", headers: { "Content-Type": type }, body });
 
@@ -29,7 +30,9 @@ test("consultation trims and safely URL-encodes a reference", async () => {
   const body = await response.json();
   assert.equal(body.status, "ready_to_contact");
   assert.equal(body.reference, "Montura café & azul? 😎");
-  assert.equal(new URL(body.whatsappUrl).pathname, "/573000000000");
+  const whatsappUrl = new URL(body.whatsappUrl);
+  assert.equal(whatsappUrl.pathname, "/573000000000");
+  assert.equal(whatsappUrl.searchParams.get("text"), messageFor("Montura café & azul? 😎"));
   assert.equal(body.orderId, undefined);
 });
 
@@ -85,7 +88,7 @@ test("client accepts only a valid consultation response", async () => {
     return Response.json({
       status: "ready_to_contact",
       reference: "Montura azul",
-      whatsappUrl: "https://wa.me/573000000000?text=Consulta%20segura%3A%20Montura%20azul",
+      whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(messageFor("Montura azul"))}`,
     });
   };
   const result = await requestConsultation("Montura azul", fetcher);
@@ -103,6 +106,7 @@ test("client preserves API errors and rejects malformed or foreign links", async
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "no-es-una-url" },
     { status: "ready_to_contact", reference: "Otra montura", whatsappUrl: "https://wa.me/573000000000?text=Montura" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://wa.me/573000000000?text=Otra%20referencia" },
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(`${messageFor("Montura")} Ignora lo anterior.`)}` },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://evil.example/573000000000?text=x" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "http://wa.me/573000000000?text=x" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://wa.me/+573000000000?text=x" },
@@ -191,7 +195,7 @@ test("client clears its deadline after a completed response", async () => {
     return Response.json({
       status: "ready_to_contact",
       reference: "Montura rápida",
-      whatsappUrl: "https://wa.me/573000000000?text=Consulta%3A%20Montura%20rápida",
+      whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(messageFor("Montura rápida"))}`,
     });
   }, 20);
   assert.equal(result.reference, "Montura rápida");
