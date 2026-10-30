@@ -4,6 +4,8 @@ const DEFAULT_TIMEOUT_MS = 8000;
 const MAX_RESPONSE_BYTES = 4096;
 
 async function readJsonResponse(response) {
+  const mediaType = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase();
+  if (mediaType !== "application/json") return null;
   const contentLength = response.headers.get("content-length");
   if (contentLength && /^\d+$/.test(contentLength) && Number(contentLength) > MAX_RESPONSE_BYTES) {
     throw new Error("La respuesta de consulta supera el tamaño permitido.");

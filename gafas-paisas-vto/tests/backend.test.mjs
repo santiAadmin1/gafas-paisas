@@ -116,6 +116,25 @@ test("client preserves API errors and rejects malformed or foreign links", async
   }
 });
 
+test("client only parses responses declared as JSON", async () => {
+  const validBody = JSON.stringify({
+    status: "ready_to_contact",
+    reference: "Montura",
+    whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(messageFor("Montura"))}`,
+  });
+  await assert.rejects(
+    requestConsultation("Montura", async () => new Response(validBody, { headers: { "Content-Type": "text/plain" } })),
+    /respuesta de consulta no es válida/,
+  );
+  await assert.rejects(
+    requestConsultation("Montura", async () => new Response('{"error":"Mensaje no confiable"}', {
+      status: 503,
+      headers: { "Content-Type": "text/plain" },
+    })),
+    /No pudimos preparar la consulta/,
+  );
+});
+
 test("client rejects oversized responses by declared and actual bytes", async () => {
   await assert.rejects(
     requestConsultation("Montura", async () => new Response("{}", {
