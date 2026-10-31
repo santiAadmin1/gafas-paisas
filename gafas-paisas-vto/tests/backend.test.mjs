@@ -116,6 +116,20 @@ test("client preserves API errors and rejects malformed or foreign links", async
   }
 });
 
+test("client only displays bounded and safe API errors", async () => {
+  const invalidErrors = ["", "   ", "Error\ninyectado", "x".repeat(201), "Unicode \ud800 inválido"];
+  for (const error of invalidErrors) {
+    await assert.rejects(
+      requestConsultation("Montura", async () => Response.json({ error }, { status: 503 })),
+      /No pudimos preparar la consulta/,
+    );
+  }
+  await assert.rejects(
+    requestConsultation("Montura", async () => Response.json({ error: "  Canal temporalmente ocupado  " }, { status: 503 })),
+    /^Error: Canal temporalmente ocupado$/,
+  );
+});
+
 test("client only parses responses declared as JSON", async () => {
   const validBody = JSON.stringify({
     status: "ready_to_contact",

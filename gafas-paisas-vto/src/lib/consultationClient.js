@@ -2,6 +2,22 @@ import { buildConsultationMessage } from "./consultationMessage.js";
 
 const DEFAULT_TIMEOUT_MS = 8000;
 const MAX_RESPONSE_BYTES = 4096;
+const MAX_ERROR_MESSAGE_LENGTH = 200;
+const DEFAULT_ERROR_MESSAGE = "No pudimos preparar la consulta.";
+
+function getApiErrorMessage(body) {
+  if (!body || typeof body !== "object" || typeof body.error !== "string") return DEFAULT_ERROR_MESSAGE;
+  const message = body.error.trim();
+  if (
+    !message
+    || message.length > MAX_ERROR_MESSAGE_LENGTH
+    || !message.isWellFormed()
+    || /[\u0000-\u001f\u007f-\u009f]/u.test(message)
+  ) {
+    return DEFAULT_ERROR_MESSAGE;
+  }
+  return message;
+}
 
 async function readJsonResponse(response) {
   const mediaType = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase();
@@ -63,10 +79,7 @@ export async function requestConsultation(reference, fetcher = fetch, timeoutMs 
     clearTimeout(timer);
   }
   if (!response.ok) {
-    const message = body && typeof body === "object" && typeof body.error === "string"
-      ? body.error
-      : "No pudimos preparar la consulta.";
-    throw new Error(message);
+    throw new Error(getApiErrorMessage(body));
   }
   if (!body || typeof body !== "object") throw new Error("La respuesta de consulta no es válida.");
   if (body.status !== "ready_to_contact" || typeof body.reference !== "string" || typeof body.whatsappUrl !== "string") {
