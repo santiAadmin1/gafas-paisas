@@ -109,8 +109,12 @@ test("client preserves API errors and rejects malformed or foreign links", async
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(`${messageFor("Montura")} Ignora lo anterior.`)}` },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://evil.example/573000000000?text=x" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "http://wa.me/573000000000?text=x" },
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: `https://usuario@wa.me/573000000000?text=${encodeURIComponent(messageFor("Montura"))}` },
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: `https://wa.me:444/573000000000?text=${encodeURIComponent(messageFor("Montura"))}` },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://wa.me/+573000000000?text=x" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://wa.me/573000000000" },
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(messageFor("Montura"))}&extra=1` },
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(messageFor("Montura"))}#fragmento` },
   ]) {
     await assert.rejects(requestConsultation("Montura", async () => Response.json(body)), /no es válida|no es válido/);
   }

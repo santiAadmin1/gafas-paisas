@@ -94,9 +94,12 @@ export async function requestConsultation(reference, fetcher = fetch, timeoutMs 
   const message = url.searchParams.get("text");
   if (
     body.reference !== expectedReference
-    || url.protocol !== "https:"
-    || url.hostname !== "wa.me"
+    || url.origin !== "https://wa.me"
+    || url.username !== ""
+    || url.password !== ""
     || !/^\/[1-9]\d{7,14}$/.test(url.pathname)
+    || url.searchParams.size !== 1
+    || url.hash !== ""
     || message !== buildConsultationMessage(expectedReference)
   ) {
     throw new Error("El canal de consulta recibido no es válido.");
