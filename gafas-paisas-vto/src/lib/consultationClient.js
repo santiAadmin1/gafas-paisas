@@ -5,8 +5,14 @@ const MAX_RESPONSE_BYTES = 4096;
 const MAX_ERROR_MESSAGE_LENGTH = 200;
 const DEFAULT_ERROR_MESSAGE = "No pudimos preparar la consulta.";
 
+function hasExactKeys(value, expectedKeys) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const keys = Object.keys(value);
+  return keys.length === expectedKeys.length && expectedKeys.every((key) => keys.includes(key));
+}
+
 function getApiErrorMessage(body) {
-  if (!body || typeof body !== "object" || typeof body.error !== "string") return DEFAULT_ERROR_MESSAGE;
+  if (!hasExactKeys(body, ["error"]) || typeof body.error !== "string") return DEFAULT_ERROR_MESSAGE;
   const message = body.error.trim();
   if (
     !message
@@ -81,7 +87,9 @@ export async function requestConsultation(reference, fetcher = fetch, timeoutMs 
   if (!response.ok) {
     throw new Error(getApiErrorMessage(body));
   }
-  if (!body || typeof body !== "object") throw new Error("La respuesta de consulta no es válida.");
+  if (!hasExactKeys(body, ["status", "reference", "whatsappUrl"])) {
+    throw new Error("La respuesta de consulta no es válida.");
+  }
   if (body.status !== "ready_to_contact" || typeof body.reference !== "string" || typeof body.whatsappUrl !== "string") {
     throw new Error("La respuesta de consulta no es válida.");
   }

@@ -103,6 +103,7 @@ test("client preserves API errors and rejects malformed or foreign links", async
   for (const body of [
     null,
     {},
+    { status: "ready_to_contact", reference: "Montura", whatsappUrl: `https://wa.me/573000000000?text=${encodeURIComponent(messageFor("Montura"))}`, orderId: "pedido-inexistente" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "no-es-una-url" },
     { status: "ready_to_contact", reference: "Otra montura", whatsappUrl: "https://wa.me/573000000000?text=Montura" },
     { status: "ready_to_contact", reference: "Montura", whatsappUrl: "https://wa.me/573000000000?text=Otra%20referencia" },
@@ -131,6 +132,10 @@ test("client only displays bounded and safe API errors", async () => {
   await assert.rejects(
     requestConsultation("Montura", async () => Response.json({ error: "  Canal temporalmente ocupado  " }, { status: 503 })),
     /^Error: Canal temporalmente ocupado$/,
+  );
+  await assert.rejects(
+    requestConsultation("Montura", async () => Response.json({ error: "Mensaje inyectado", detail: "campo inesperado" }, { status: 503 })),
+    /No pudimos preparar la consulta/,
   );
 });
 
