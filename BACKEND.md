@@ -15,7 +15,7 @@ La vista de captura consume `POST /api/consultations` antes de compartir. Exige 
 
 El cliente cancela la solicitud después de ocho segundos, incluso si la respuesta comenzó pero su cuerpo no termina de llegar, solo interpreta respuestas declaradas como `application/json`, limita la respuesta a 4096 bytes reales y convierte fallos de red en un mensaje recuperable. Los mensajes de error del API solo se muestran si contienen 1–200 caracteres Unicode bien formados y sin controles; las respuestas que no cumplen usan un mensaje genérico. En favoritas se bloquean temporalmente todos los botones de compra mientras una consulta está en curso, evitando solicitudes y ventanas duplicadas.
 
-La referencia admite 1–120 unidades UTF-16, Unicode bien formado y ningún carácter de control. Solo se admite ese campo. El cuerpo se limita a 1024 bytes reales y cinco segundos de lectura. Si `Content-Length` ya declara un exceso, se rechaza antes de leer el flujo; declarar un valor menor no evita la comprobación de bytes reales. Las respuestas usan `Cache-Control: no-store`.
+La referencia admite 1–120 unidades UTF-16, Unicode bien formado y ningún carácter de control. Solo se admite ese campo. El cuerpo se limita a 1024 bytes reales y cinco segundos de lectura. Si `Content-Length` ya declara un exceso, se rechaza antes de leer el flujo; declarar un valor menor no evita la comprobación de bytes reales. Cuando un flujo excede el límite o vence su plazo, la cancelación termina antes de liberar el lector. Las respuestas usan `Cache-Control: no-store`.
 
 ## Verificación
 

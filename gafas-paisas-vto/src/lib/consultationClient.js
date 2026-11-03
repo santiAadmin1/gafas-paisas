@@ -41,7 +41,7 @@ async function readJsonResponse(response) {
       const { done, value } = await reader.read();
       if (done) break;
       if (size + value.byteLength > MAX_RESPONSE_BYTES) {
-        void reader.cancel().catch(() => {});
+        await reader.cancel().catch(() => {});
         throw new Error("La respuesta de consulta supera el tamaño permitido.");
       }
       bytes.set(value, size);

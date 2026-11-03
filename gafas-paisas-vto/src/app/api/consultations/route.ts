@@ -27,7 +27,6 @@ export async function POST(request: Request) {
     timer = setTimeout(() => {
       timedOut = true;
       reject(new Error("Body timeout"));
-      void reader.cancel().catch(() => {});
     }, BODY_TIMEOUT_MS);
   });
 
@@ -37,7 +36,7 @@ export async function POST(request: Request) {
       const { done, value } = await Promise.race([reader.read(), deadline]);
       if (done) break;
       if (size + value.byteLength > MAX_BODY_BYTES) {
-        void reader.cancel().catch(() => {});
+        await reader.cancel().catch(() => {});
         return json({ error: "La consulta supera 1024 bytes." }, 413);
       }
       bytes.set(value, size);
@@ -45,6 +44,7 @@ export async function POST(request: Request) {
     }
     input = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes.subarray(0, size)));
   } catch {
+    if (timedOut) await reader.cancel().catch(() => {});
     return timedOut
       ? json({ error: "Se agotó el tiempo para recibir la consulta." }, 408)
       : json({ error: "El cuerpo debe contener JSON válido." }, 400);

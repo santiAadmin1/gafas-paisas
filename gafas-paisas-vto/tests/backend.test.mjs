@@ -58,17 +58,28 @@ test("rejects a body whose declared size exceeds the limit", async () => {
   assert.equal(response.status, 413);
 });
 
-test("cancels an overflowing chunked stream", async () => {
+test("awaits cancellation of an overflowing chunked stream", async () => {
   let cancelled = false;
-  const stream = new ReadableStream({ start(c) { c.enqueue(new Uint8Array(600)); c.enqueue(new Uint8Array(600)); }, cancel() { cancelled = true; } });
+  const stream = new ReadableStream({
+    start(c) { c.enqueue(new Uint8Array(600)); c.enqueue(new Uint8Array(600)); },
+    async cancel() {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      cancelled = true;
+    },
+  });
   const response = await POST(new Request("http://localhost/api/consultations", { method: "POST", headers: { "Content-Type": "application/json" }, body: stream, duplex: "half" }));
   assert.equal(response.status, 413);
   assert.equal(cancelled, true);
 });
 
-test("times out a request body that never completes", async () => {
+test("times out a request body and awaits its cancellation", async () => {
   let cancelled = false;
-  const stream = new ReadableStream({ cancel() { cancelled = true; } });
+  const stream = new ReadableStream({
+    async cancel() {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      cancelled = true;
+    },
+  });
   const response = await POST(new Request("http://localhost/api/consultations", { method: "POST", headers: { "Content-Type": "application/json" }, body: stream, duplex: "half" }));
   assert.equal(response.status, 408);
   assert.equal(cancelled, true);
@@ -158,7 +169,7 @@ test("client only parses responses declared as JSON", async () => {
   );
 });
 
-test("client rejects oversized responses by declared and actual bytes", async () => {
+test("client rejects oversized responses and awaits stream cancellation", async () => {
   await assert.rejects(
     requestConsultation("Montura", async () => new Response("{}", {
       headers: { "Content-Type": "application/json", "Content-Length": "4097" },
@@ -172,7 +183,8 @@ test("client rejects oversized responses by declared and actual bytes", async ()
       controller.enqueue(new Uint8Array(3000));
       controller.enqueue(new Uint8Array(3000));
     },
-    cancel() {
+    async cancel() {
+      await new Promise((resolve) => setTimeout(resolve, 10));
       cancelled = true;
     },
   });
