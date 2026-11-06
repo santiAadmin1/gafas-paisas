@@ -6,6 +6,9 @@
   --brand-blue: #0669e6;
   --brand-blue-dark: #0053c2;
   --brand-black: #06162f;
+  /* Naranja Actitud (manual): solo para la acción principal, <10% de la pantalla. */
+  --brand-orange: #ff4d2e;
+  --brand-orange-dark: #e63c1f;
 }
 @theme inline {
   --color-background: var(--background);
@@ -13,13 +16,23 @@
   --color-brand-blue: var(--brand-blue);
   --color-brand-blue-dark: var(--brand-blue-dark);
   --color-brand-black: var(--brand-black);
-  --font-sans: "Poppins", Arial, Helvetica, sans-serif;
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-orange-dark: var(--brand-orange-dark);
+  /* Manual de marca: Anton para titulares (mayúsculas) + Montserrat para texto. */
+  --font-sans: "Montserrat", Arial, Helvetica, sans-serif;
+  --font-display: "Anton", "Arial Narrow", Impact, sans-serif;
   --font-script: "Dancing Script", cursive;
 }
 html, body { min-height: 100%; }
 body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); overscroll-behavior: none; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
+.font-display { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; letter-spacing: .01em; }
+/* Un solo destello en el botón principal, una vez, después de que entra el titular. */
+.gp-shine::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%); transform: translateX(-120%); animation: gp-shine 1.1s cubic-bezier(.22,1,.36,1) 1.3s 1 forwards; pointer-events: none; }
+@keyframes gp-shine { to { transform: translateX(120%); } }
+.gp-no-scrollbar { scrollbar-width: none; }
+.gp-no-scrollbar::-webkit-scrollbar { display: none; }
 :focus-visible { outline: 3px solid #98ceff; outline-offset: 3px; }
 .no-select { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .gp-hero-glow { background: radial-gradient(ellipse at 74% 34%,rgba(18,108,229,.56) 0%,rgba(13,69,148,.38) 28%,rgba(6,22,47,0) 68%),linear-gradient(135deg,#0b2b53 0%,#071a36 56%,#050e22 100%); }

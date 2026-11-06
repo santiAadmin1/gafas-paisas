@@ -32,6 +32,8 @@ export const CameraStage = forwardRef<CameraStageHandle, Props>(function CameraS
   const rafRef = useRef<number | null>(null);
   const { ready, error: trackerError, detect } = useFaceLandmarker();
   const [cameraError, setCameraError] = useState<string | null>(null);
+  // Cambiar este número vuelve a pedir la cámara (botón "Intentar de nuevo").
+  const [cameraAttempt, setCameraAttempt] = useState(0);
   const [faceFound, setFaceFound] = useState(false);
 
   glassesRef.current = glasses;
@@ -76,7 +78,7 @@ export const CameraStage = forwardRef<CameraStageHandle, Props>(function CameraS
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
       } catch {
-        if (!cancelled) setCameraError("No pudimos acceder a tu cámara. Revisa los permisos del navegador.");
+        if (!cancelled) setCameraError("No pudimos prender tu cámara.");
       }
     })();
 
@@ -84,7 +86,7 @@ export const CameraStage = forwardRef<CameraStageHandle, Props>(function CameraS
       cancelled = true;
       stream?.getTracks().forEach((t) => t.stop());
     };
-  }, []);
+  }, [cameraAttempt]);
 
   useEffect(() => {
     if (!ready || !canvasRef.current) return;
@@ -140,21 +142,33 @@ export const CameraStage = forwardRef<CameraStageHandle, Props>(function CameraS
       </div>
 
       {(cameraError || trackerError) && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/80 p-6 text-center text-sm text-white">
-          {cameraError ?? trackerError}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/85 p-6 text-center text-white">
+          <p className="text-base font-bold">{cameraError ?? trackerError}</p>
+          {cameraError && (
+            <>
+              <p className="max-w-xs text-xs leading-5 text-white/70">Toca el candado junto a la dirección de la página, dale permiso a la cámara y vuelve a intentar.</p>
+              <button
+                type="button"
+                onClick={() => { setCameraError(null); setCameraAttempt((n) => n + 1); }}
+                className="mt-1 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#06162f]"
+              >
+                Intentar de nuevo
+              </button>
+            </>
+          )}
         </div>
       )}
 
       {!cameraError && !trackerError && !ready && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-sm text-white/80">
-          Cargando tracking facial…
+          Preparando el espejo… 👀
         </div>
       )}
 
       {!cameraError && !trackerError && ready && !faceFound && (
         <div className="pointer-events-none absolute inset-x-0 top-6 flex justify-center">
           <span className="rounded-full bg-black/50 px-4 py-2 text-xs text-white/90 backdrop-blur">
-            Centra tu rostro en la cámara
+            Ponte de frente a la cámara 😎
           </span>
         </div>
       )}

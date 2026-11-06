@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Gafas Paisas | Probador Virtual",
-  description: "Prueba cómo se ven tus gafas antes de comprarlas.",
+  title: "Pruébate tu actitud | Gafas Paisas",
+  description: "Pruébate las gafas en vivo con tu cámara y pídelas por WhatsApp. En Medellín te llegan hoy mismo.",
 };
 
 export const viewport: Viewport = {
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap"
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">

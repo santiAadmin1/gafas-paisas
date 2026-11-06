@@ -11,10 +11,10 @@ export const CATALOG_URL =
   "https://drive.google.com/drive/folders/1JF5SdGNVkwzYRchjVZN_u6oifwxRNMgg?usp=drive_link";
 
 export const WHATSAPP_INTEREST_MESSAGE =
-  "Hola Gafas Paisas, probé esta referencia virtualmente y estoy interesado en comprarla.";
+  "¡Hola Gafas Paisas! 😎 Me las probé en el probador virtual y me encantaron. ¿Cuánto valen y me llegan hoy?";
 
 export const WHATSAPP_GENERIC_MESSAGE =
-  "Hola Gafas Paisas, quiero ver el catálogo de monturas.";
+  "¡Hola Gafas Paisas! 😎 Quiero ver los modelos que tienen disponibles.";
 
 export const MAX_FAVORITES = 5;
 
@@ -28,5 +28,5 @@ export function buildWhatsAppUrl(message: string): string {
  * ya conoce). No inventa precio ni disponibilidad.
  */
 export function buildOrderMessage(code: string, name: string): string {
-  return `${WHATSAPP_INTEREST_MESSAGE}\n\nReferencia: ${code} — ${name}`;
+  return `¡Hola Gafas Paisas! 😎 Me probé la ${name} (${code}) en el probador virtual y me encantó. ¿Cuánto vale y me llega hoy?`;
 }

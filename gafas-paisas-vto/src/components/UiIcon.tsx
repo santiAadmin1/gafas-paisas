@@ -4,7 +4,7 @@ export type IconName =
   | "instagram" | "camera" | "phone" | "arrow-right" | "arrow-up-right" | "lock"
   | "check" | "sparkles" | "upload" | "shopping-bag" | "photo" | "heart"
   | "chevron-left" | "chevron-right" | "sliders" | "close" | "layers"
-  | "shield" | "external" | "eye" | "info" | "refresh";
+  | "shield" | "external" | "eye" | "info" | "refresh" | "bolt" | "wallet" | "whatsapp" | "more" | "expand";
 
 type Props = { name: IconName; size?: number; className?: string; strokeWidth?: number };
 
@@ -31,6 +31,11 @@ export function UiIcon({ name, size = 20, className = "", strokeWidth = 1.8 }: P
     external: <><path d="M13 5h6v6M19 5l-9 9" /><path d="M19 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4" /></>,
     eye: <><path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12Z" /><circle cx="12" cy="12" r="2.7" /></>,
     info: <><circle cx="12" cy="12" r="10" /><path d="M12 11v6M12 7h.01" /></>,
+    bolt: <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />,
+    wallet: <><path d="M3 7a2 2 0 0 1 2-2h13v4" /><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M16 13.5h2" /></>,
+    whatsapp: <><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.2 3.1Z" /><path d="M9 9.2c.3 2.2 2.3 4.4 4.8 5 .6.1 1.3-.5 1.5-1.1l-1.5-.9-.8.7c-.9-.4-1.8-1.3-2.2-2.2l.7-.8-.9-1.5c-.6.2-1.2.9-1.1 1.5" /></>,
+    more: <><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" /><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none" /></>,
+    expand: <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />,
     refresh: <><path d="M20 7V3l-4 4M4 17v4l4-4" /><path d="M20 7a8 8 0 0 0-14-2M4 17a8 8 0 0 0 14 2" /></>,
   };
   return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`} aria-hidden="true">{paths[name]}</svg>;
