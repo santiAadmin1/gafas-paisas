@@ -229,11 +229,10 @@ export const CATALOGO: CatalogModel[] = [
 ];
 
 /**
- * Vistas reconstruidas con IA (GP-097–GP-140): ocultas al público hasta que alguien
- * las compare con la gafa real. Al validar un modelo, quítale `reconstruidaIA`
- * (o pon esto en true para mostrarlas todas).
+ * Vistas reconstruidas con IA (GP-097–GP-140): publicadas. Pon esto en false
+ * para ocultarlas al público de nuevo.
  */
-export const MOSTRAR_VISTAS_IA = false;
+export const MOSTRAR_VISTAS_IA = true;
 
 export const MODELOS_ACTIVOS: CatalogModel[] = CATALOGO.filter((m) => m.activo && (MOSTRAR_VISTAS_IA || !m.reconstruidaIA));
 

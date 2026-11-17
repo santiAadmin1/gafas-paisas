@@ -1,6 +1,6 @@
 # Revisión de imágenes del probador · 17 de noviembre de 2026
 
-El catálogo cargado pasa de 96 a **140 referencias** (96 visibles al público). Cada una tiene frente y patilla: **280 PNG transparentes**. Las 16 referencias históricas de dos dígitos permanecen inactivas; sus rutas también se comprobaron, pero no se reactivaron sus emparejamientos dudosos.
+El catálogo cargado pasa de 96 a **140 referencias** (las 140 visibles al público). Cada una tiene frente y patilla: **280 PNG transparentes**. Las 16 referencias históricas de dos dígitos permanecen inactivas; sus rutas también se comprobaron, pero no se reactivaron sus emparejamientos dudosos.
 
 ## Qué cambió
 
@@ -9,7 +9,7 @@ El catálogo cargado pasa de 96 a **140 referencias** (96 visibles al público).
 - Las vistas nuevas usan PNG RGBA de 1.200 px de ancho, proporciones conservadas y 34 px de margen transparente. La patilla tiene la bisagra a la izquierda. Las miniaturas son JPG de 320 × 160.
 - GP-138 recibió una segunda corrección para quitar el marco superior añadido por IA y hacer transparentes los lentes claros.
 - El probador calcula las uniones sobre los píxeles visibles, compensa los márgenes de la patilla y gira desde la bisagra. La patilla escala con el frente. Los anclajes se guardan en memoria para no repetir el análisis de píxeles al cambiar de tamaño.
-- Las referencias nuevas tienen `reconstruidaIA: true`, confianza media y un aviso en sus metadatos. **Están ocultas al público** (`MOSTRAR_VISTAS_IA = false` en `src/lib/catalog.ts`) hasta validarlas contra el producto real; el catálogo público muestra 96 referencias.
+- Las referencias nuevas tienen `reconstruidaIA: true`, confianza media y un aviso en sus metadatos. Desde el 17/11/2026 son **visibles al público** (`MOSTRAR_VISTAS_IA = true` en `src/lib/catalog.ts`) con su categoría asignada; el catálogo público muestra las 140 referencias.
 
 ## Revisión visual
 

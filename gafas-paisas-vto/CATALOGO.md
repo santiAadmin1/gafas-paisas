@@ -1,6 +1,6 @@
 # Catálogo de monturas — Gafas Paisas VTO
 
-> Actualización 17/11/2026: hay 140 referencias cargadas (GP-001–GP-140), con 280 vistas PNG. Las 44 nuevas (GP-097–GP-140) son reconstrucciones IA y están ocultas al público (`MOSTRAR_VISTAS_IA = false` en `src/lib/catalog.ts`) hasta validarlas contra el producto real. Ver [auditoría y láminas](docs/AUDITORIA_IMAGENES.md). El contenido de TANDA 1 que sigue es histórico.
+> Actualización 17/11/2026: hay 140 referencias cargadas (GP-001–GP-140), con 280 vistas PNG. Las 44 nuevas (GP-097–GP-140) son reconstrucciones IA y están publicadas con su categoría (`MOSTRAR_VISTAS_IA = true` en `src/lib/catalog.ts`); falta compararlas con el producto real. Ver [auditoría y láminas](docs/AUDITORIA_IMAGENES.md). El contenido de TANDA 1 que sigue es histórico.
 
 Guía operativa del catálogo integrado al probador virtual (TANDA 1).
 
