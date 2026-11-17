@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import type { CatalogModel } from "@/lib/catalog";
-import { CATALOG_URL } from "@/lib/constants";
+import { CATALOG_URL, buildWhatsAppUrl, WHATSAPP_GENERIC_MESSAGE } from "@/lib/constants";
 import { InstagramLink } from "./InstagramLink";
 import { ModelPicker } from "./ModelPicker";
+import { HeroShowcase } from "./HeroShowcase";
 import { UiIcon, type IconName } from "./UiIcon";
 
 type Props = {
@@ -24,12 +25,6 @@ const PROMESAS: { icon: IconName; title: string; text: string }[] = [
   { icon: "shield", title: "UV400 real", text: "y con garantía" },
 ];
 
-const PASOS: { icon: IconName; title: string; text: string; extra?: string }[] = [
-  { icon: "shopping-bag", title: "Elige", text: "Toca el modelo que más te guste de la selección." },
-  { icon: "camera", title: "Mírate", text: "Prende la cámara y te las ves puestas, en vivo." },
-  { icon: "whatsapp", title: "Pídela", text: "Escríbenos por WhatsApp con un toque.", extra: "Antes de la 1, te llegan hoy" },
-];
-
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 // Única secuencia orquestada de la página: el titular entra línea por línea.
@@ -39,7 +34,7 @@ const rise: Variants = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0
 
 export function Landing({ catalog, selectedId, onActivate }: Props) {
   function verSeleccion() {
-    document.getElementById("catalogo")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("catalogo")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
   }
 
   return (
@@ -47,15 +42,18 @@ export function Landing({ catalog, selectedId, onActivate }: Props) {
       <div aria-hidden className="gp-hero-glow pointer-events-none absolute inset-0 -z-10" />
       <header className="flex w-full items-center justify-between gap-3">
         <Image src="/brand/logo-blanco.png" alt="Gafas Paisas" width={174} height={75} priority className="h-auto w-[140px] object-contain sm:w-[176px]" />
-        <div className="sm:hidden"><InstagramLink variant="subtle" iconOnly /></div>
-        <div className="hidden sm:block"><InstagramLink variant="subtle" /></div>
+        <nav aria-label="Navegación principal" className="flex items-center gap-3 sm:gap-6">
+          <button type="button" onClick={verSeleccion} className="hidden py-3 text-xs font-semibold text-blue-100/80 transition hover:text-white sm:block">Explorar gafas</button>
+          <a href={buildWhatsAppUrl(WHATSAPP_GENERIC_MESSAGE)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/20 px-4 text-xs font-semibold transition hover:bg-white/10"><UiIcon name="whatsapp" size={17}/> Hablemos</a>
+          <InstagramLink variant="subtle" iconOnly />
+        </nav>
       </header>
 
       <div className="mx-auto grid w-full max-w-[1200px] flex-1 items-center gap-10 pb-10 pt-12 lg:grid-cols-[1.08fr_.92fr] lg:gap-14 lg:py-14">
         <motion.section variants={hero} initial="hidden" animate="show">
           <h1 className="font-display max-w-[680px] text-[clamp(3.4rem,10vw,6.6rem)] leading-[.92]">
             {["Pruébate", "tu actitud."].map((t) => (
-              <span key={t} className="-mt-[.16em] block overflow-hidden pb-[.04em] pt-[.16em]"><motion.span variants={line} className="block">{t}</motion.span></span>
+              <span key={t} className="-mt-[.16em] block overflow-hidden pb-[.04em] pt-[.16em]"><motion.span variants={line} className={t === "tu actitud." ? "block text-brand-orange" : "block"}>{t}</motion.span></span>
             ))}
           </h1>
           <motion.p variants={rise} className="mt-5 max-w-[30ch] text-lg font-semibold leading-snug text-[#cfe3ff] sm:text-xl">
@@ -103,64 +101,21 @@ export function Landing({ catalog, selectedId, onActivate }: Props) {
           </motion.ul>
         </motion.section>
 
-        {/* Así de fácil: es un proceso real de 3 pasos, por eso va numerado. El último (pedir) se resalta en naranja. */}
-        <motion.aside
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: .7, delay: .35, ease: EASE }}
-          className="relative overflow-hidden rounded-[32px] border border-white/12 bg-gradient-to-b from-white/[.09] to-white/[.03] p-5 backdrop-blur-xl sm:p-8"
-          aria-labelledby="pasos-title"
-        >
-          <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#0669e6]/30 blur-3xl" />
-          <h2 id="pasos-title" className="font-display text-[2.1rem] leading-none sm:text-[2.6rem]">Así de fácil</h2>
-          <p className="mt-2 text-sm text-blue-100/65">De verlas a tenerlas puestas, en tres toques.</p>
-
-          <ol className="mt-6 grid gap-2.5">
-            {PASOS.map((item, i) => {
-              const final = i === PASOS.length - 1;
-              return (
-                <motion.li
-                  key={item.title}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: .55, delay: .6 + i * .15, ease: EASE }}
-                  className={`relative overflow-hidden rounded-2xl border px-3.5 py-4 sm:px-4 ${final ? "border-brand-orange/50 bg-brand-orange/[.12]" : "border-white/10 bg-white/[.05]"}`}
-                >
-                  <div className="flex items-center gap-3.5">
-                    {/* El número es el ancla visual de cada paso. */}
-                    <span aria-hidden className={`font-display w-8 shrink-0 text-center text-[2.8rem] leading-none ${final ? "text-brand-orange" : "text-[#8fc8ff]"}`}>{i + 1}</span>
-                    <div className="min-w-0 flex-1">
-                      <p className="flex items-center gap-2 text-[17px] font-extrabold leading-tight">
-                        {item.title}
-                        <UiIcon name={item.icon} size={17} className={final ? "text-brand-orange" : "text-[#8fc8ff]/80"} />
-                      </p>
-                      <p className="mt-1 text-[14px] leading-snug text-blue-50/85">{item.text}</p>
-                    </div>
-                  </div>
-                  {item.extra && (
-                    <p className="mt-3 flex items-center justify-center gap-1.5 rounded-full bg-brand-orange px-3 py-1.5 text-[12.5px] font-bold text-white">
-                      <UiIcon name="bolt" size={14} /> {item.extra}
-                    </p>
-                  )}
-                </motion.li>
-              );
-            })}
-          </ol>
-        </motion.aside>
+        <HeroShowcase models={catalog} onSelect={onActivate} />
       </div>
 
       {catalog.length > 0 && (
-        <section id="catalogo" className="mx-auto w-full max-w-[1200px] scroll-mt-4 pb-12" aria-labelledby="catalogo-title">
+        <section id="catalogo" className="mx-auto w-full max-w-[1200px] scroll-mt-6 border-t border-white/10 pb-12 pt-12" aria-labelledby="catalogo-title">
           <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-[560px]">
-              <h2 id="catalogo-title" className="font-display text-[2.2rem] leading-[.95] sm:text-5xl">Seleccionadas para probártelas</h2>
+              <h2 id="catalogo-title" className="font-display text-[2.2rem] leading-[.95] sm:text-5xl">Encuentra tu facha.</h2>
               <p className="mt-3 text-sm leading-6 text-blue-100/75">
                 Estas {catalog.length} las escogimos para que te las pruebes aquí mismo. Pero no son todas: en el catálogo completo tenemos muchas más referencias para elegir y comprar.
               </p>
             </div>
             <CatalogoCompletoLink variant="ghost" />
           </div>
-          <ModelPicker models={catalog} selectedId={selectedId} onSelect={(id) => onActivate(id)} className="lg:grid-cols-5" filterable />
+          <ModelPicker models={catalog} selectedId={selectedId} onSelect={(id) => onActivate(id)} className="lg:grid-cols-4" filterable />
           <CatalogoCompletoBanner />
         </section>
       )}

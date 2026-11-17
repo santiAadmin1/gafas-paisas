@@ -81,7 +81,7 @@ hace su primera prueba, menor a 10 segundos.
                               "Guardar en favoritas" · "Quiero estas gafas 💬"
                                                        │
                                                        ▼
-                                     Comparte por WhatsApp (+57 304 206 4121)
+                                     Comparte por WhatsApp (+57 323 556 2150)
                                      con mensaje pre-armado y la foto adjunta
 ```
 
@@ -274,7 +274,7 @@ Todos los valores específicos del negocio están centralizados y son el
 
 | Constante | Valor actual | Notas |
 |---|---|---|
-| `WHATSAPP_NUMBER` | `573042064121` (+57 304 206 4121) | Formato internacional sin `+` ni espacios, como lo exige `wa.me`. |
+| `WHATSAPP_NUMBER` | `573235562150` (+57 323 556 2150) | Formato internacional sin `+` ni espacios, como lo exige `wa.me`. |
 | `CATALOG_URL` | Carpeta de Google Drive provista | Botón "Buscar gafas". Cambiar cuando exista tienda online / catálogo de WhatsApp Business. |
 | `WHATSAPP_INTEREST_MESSAGE` | *"Hola Gafas Paisas, probé esta referencia virtualmente y estoy interesado en comprarla."* | Mensaje pre-armado al compartir una captura. |
 | `MAX_FAVORITES` | `5` | Límite del panel "Mis favoritas". |
@@ -396,7 +396,7 @@ npx http-server gafas-paisas-html -p 3001
 export const BRAND_NAME = "Gafas Paisas";
 
 // Número de WhatsApp Business (formato internacional, sin "+" ni espacios)
-export const WHATSAPP_NUMBER = "573042064121";
+export const WHATSAPP_NUMBER = "573235562150";
 
 // Catálogo externo (hoy: carpeta de Drive con las referencias). Cambiar aquí
 // cuando exista tienda online / catálogo de WhatsApp Business.
@@ -1849,7 +1849,7 @@ JavaScript (ES module) inline — sin dependencias instaladas, sin build.
 // ============================================================
 
 // ---------- Constantes de marca / negocio ----------
-const WHATSAPP_NUMBER = "573042064121";
+const WHATSAPP_NUMBER = "573235562150";
 const CATALOG_URL = "https://drive.google.com/drive/folders/1JF5SdGNVkwzYRchjVZN_u6oifwxRNMgg?usp=drive_link";
 const WHATSAPP_INTEREST_MESSAGE = "Hola Gafas Paisas, probé esta referencia virtualmente y estoy interesado en comprarla.";
 const MAX_FAVORITES = 5;

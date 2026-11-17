@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { imageAnchors } from "./imageAnchors";
 import type { FaceLandmark } from "@/hooks/useFaceLandmarker";
 import type { ProcessedGlasses } from "./glassesProcessor";
 import { DEFAULT_ADJUSTMENT, type Adjustment } from "@/hooks/useSession";
@@ -51,7 +52,6 @@ const TEMPLE_PITCH = 0.1;
 const TEMPLE_HEIGHT_FRONT = 0.045;
 const TEMPLE_HEIGHT_BACK = 0.022;
 const TEMPLE_THICKNESS = 0.014;
-const HINGE_FROM_TOP = 0.34; // fracción de la altura de la montura, medida desde arriba
 // Giro de cabeza (en |right.z|, ~seno del ángulo) en que las patas empiezan
 // a aparecer y en que ya se ven completas: ~7° y ~17°.
 const TEMPLE_FADE_START = 0.12;
@@ -179,19 +179,20 @@ export class GlassesRenderer {
 
     const textures: THREE.Texture[] = [texture];
     const color = sampleTempleColor(glasses.canvas);
-    const hingeY = -BRIDGE_HEIGHT_FRACTION * frontH + HINGE_FROM_TOP * frontH;
+    const anchors = canvasAnchors(glasses.canvas);
     const templeTex = glasses.temple ? makeTexture(glasses.temple) : null;
     if (templeTex) textures.push(templeTex);
 
     const temples = ([-1, 1] as const).map((side): THREE.Mesh => {
+      const hingeY = ((side < 0 ? anchors.leftY : anchors.rightY) - BRIDGE_HEIGHT_FRACTION) * frontH;
       const mesh =
         templeTex && glasses.temple
-          ? photoTemple(templeTex, glasses.temple, hingeY)
+          ? photoTemple(templeTex, glasses.temple, frontW / FRAME_TO_FACE_RATIO)
           : new THREE.Mesh(templeGeometry(), new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide }));
-      if (!templeTex) mesh.position.y = hingeY;
+      mesh.position.y = hingeY;
       // La pata va a lo largo de -z; se abre levemente hacia afuera.
-      mesh.position.x = side * (frontW / 2 - TEMPLE_THICKNESS);
-      mesh.position.z = FRONT_FORWARD - 0.01;
+      mesh.position.x = ((side < 0 ? anchors.left : anchors.right) - 0.5) * frontW - side * TEMPLE_THICKNESS / 2;
+      mesh.position.z = FRONT_FORWARD;
       mesh.rotation.set(TEMPLE_PITCH, -side * Math.atan2(TEMPLE_SPREAD, TEMPLE_LENGTH), 0, "YXZ");
       mesh.renderOrder = 1;
       return mesh;
@@ -327,16 +328,28 @@ function makeTexture(canvas: HTMLCanvasElement) {
  * foto en el origen y el resto hacia atrás (-z). La barra de la foto queda
  * centrada a la altura de la bisagra.
  */
-function photoTemple(tex: THREE.Texture, src: HTMLCanvasElement, hingeY: number) {
-  const L = PHOTO_TEMPLE_LENGTH;
+const anchorCache = new WeakMap<HTMLCanvasElement, ReturnType<typeof imageAnchors>>();
+
+function canvasAnchors(canvas: HTMLCanvasElement) {
+  const cached = anchorCache.get(canvas);
+  if (cached) return cached;
+  const pixels = canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data;
+  const anchors = imageAnchors(pixels, canvas.width, canvas.height);
+  anchorCache.set(canvas, anchors);
+  return anchors;
+}
+
+function photoTemple(tex: THREE.Texture, src: HTMLCanvasElement, scale: number) {
+  const anchors = canvasAnchors(src);
+  const L = PHOTO_TEMPLE_LENGTH * scale / (anchors.right - anchors.left);
   const H = L * (src.height / src.width);
-  const { top, bottom } = barRowsAtHinge(src);
-  const y0 = hingeY - ((top + bottom) / 2) * H;
+  const y0 = -anchors.leftY * H;
+  const z0 = anchors.left * L;
   const geo = new THREE.BufferGeometry();
   // Vértices: bisagra-arriba, atrás-arriba, atrás-abajo, bisagra-abajo.
   geo.setAttribute(
     "position",
-    new THREE.Float32BufferAttribute([0, y0, 0, 0, y0, -L, 0, y0 + H, -L, 0, y0 + H, 0], 3)
+    new THREE.Float32BufferAttribute([0, y0, z0, 0, y0, z0 - L, 0, y0 + H, z0 - L, 0, y0 + H, z0], 3)
   );
   // La bisagra de la foto (u = 0) siempre va en la bisagra de la montura.
   // En uno de los dos lados el logo se ve espejado (se mira el plano por
@@ -347,24 +360,6 @@ function photoTemple(tex: THREE.Texture, src: HTMLCanvasElement, hingeY: number)
     geo,
     new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, alphaTest: 0.05 })
   );
-}
-
-/** Filas (fracción de la altura) donde está la barra en el extremo de la bisagra. */
-function barRowsAtHinge(canvas: HTMLCanvasElement) {
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return { top: 0, bottom: 0.2 };
-  const x = Math.round(canvas.width * 0.08);
-  const d = ctx.getImageData(x, 0, 1, canvas.height).data;
-  let top = -1,
-    bottom = -1;
-  for (let y = 0; y < canvas.height; y++) {
-    if (d[y * 4 + 3] > 128) {
-      if (top < 0) top = y;
-      bottom = y;
-    }
-  }
-  if (top < 0) return { top: 0, bottom: 0.2 };
-  return { top: top / canvas.height, bottom: bottom / canvas.height };
 }
 
 /** Pata: barra que se afina hacia atrás y cae un poco al llegar a la oreja. */

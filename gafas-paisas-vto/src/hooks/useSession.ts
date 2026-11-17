@@ -49,7 +49,7 @@ export function useSession() {
       if (cancelled) return;
       try {
         const saved = sessionStorage.getItem(SELECTED_KEY);
-        if (saved && getModel(saved)) setSelectedModelId(saved);
+        if (saved && MODELOS_ACTIVOS.some((m) => m.id === saved)) setSelectedModelId(saved);
       } catch {
         /* storage no disponible */
       }

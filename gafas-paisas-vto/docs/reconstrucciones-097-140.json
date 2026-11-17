@@ -1,0 +1,1278 @@
+[
+  {
+    "id": "GP-097",
+    "source": "/catalogo/originales/GP-097.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 470,
+        "bytes": 775832,
+        "sourceBounds": {
+          "left": 132,
+          "top": 15,
+          "width": 1508,
+          "height": 535
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 238,
+        "bytes": 89740,
+        "sourceBounds": {
+          "left": 130,
+          "top": 644,
+          "width": 1473,
+          "height": 221
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-098",
+    "source": "/catalogo/originales/GP-098.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 466,
+        "bytes": 522904,
+        "sourceBounds": {
+          "left": 68,
+          "top": 55,
+          "width": 1393,
+          "height": 490
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 261,
+        "bytes": 96131,
+        "sourceBounds": {
+          "left": 87,
+          "top": 754,
+          "width": 1346,
+          "height": 230
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-099",
+    "source": "/catalogo/originales/GP-099.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 466,
+        "bytes": 555572,
+        "sourceBounds": {
+          "left": 175,
+          "top": 86,
+          "width": 1396,
+          "height": 491
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 205,
+        "bytes": 91493,
+        "sourceBounds": {
+          "left": 120,
+          "top": 674,
+          "width": 1493,
+          "height": 181
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-100",
+    "source": "/catalogo/originales/GP-100.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 460,
+        "bytes": 542011,
+        "sourceBounds": {
+          "left": 164,
+          "top": 33,
+          "width": 1445,
+          "height": 500
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 218,
+        "bytes": 90059,
+        "sourceBounds": {
+          "left": 164,
+          "top": 682,
+          "width": 1428,
+          "height": 189
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-101",
+    "source": "/catalogo/originales/GP-101.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 468,
+        "bytes": 490956,
+        "sourceBounds": {
+          "left": 72,
+          "top": 65,
+          "width": 1391,
+          "height": 491
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 247,
+        "bytes": 90855,
+        "sourceBounds": {
+          "left": 98,
+          "top": 772,
+          "width": 1323,
+          "height": 209
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-102",
+    "source": "/catalogo/originales/GP-102.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 467,
+        "bytes": 703732,
+        "sourceBounds": {
+          "left": 51,
+          "top": 74,
+          "width": 1434,
+          "height": 506
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 264,
+        "bytes": 86221,
+        "sourceBounds": {
+          "left": 63,
+          "top": 748,
+          "width": 1372,
+          "height": 237
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-103",
+    "source": "/catalogo/originales/GP-103.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 467,
+        "bytes": 584456,
+        "sourceBounds": {
+          "left": 40,
+          "top": 65,
+          "width": 1454,
+          "height": 512
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 268,
+        "bytes": 82344,
+        "sourceBounds": {
+          "left": 91,
+          "top": 752,
+          "width": 1322,
+          "height": 233
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-104",
+    "source": "/catalogo/originales/GP-104.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 465,
+        "bytes": 452429,
+        "sourceBounds": {
+          "left": 52,
+          "top": 87,
+          "width": 1427,
+          "height": 500
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 235,
+        "bytes": 100595,
+        "sourceBounds": {
+          "left": 68,
+          "top": 785,
+          "width": 1373,
+          "height": 203
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-105",
+    "source": "/catalogo/originales/GP-105.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 418,
+        "bytes": 364770,
+        "sourceBounds": {
+          "left": 97,
+          "top": 25,
+          "width": 1580,
+          "height": 489
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 217,
+        "bytes": 79422,
+        "sourceBounds": {
+          "left": 97,
+          "top": 667,
+          "width": 1577,
+          "height": 208
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-106",
+    "source": "/catalogo/originales/GP-106.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 428,
+        "bytes": 428235,
+        "sourceBounds": {
+          "left": 106,
+          "top": 19,
+          "width": 1561,
+          "height": 496
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 224,
+        "bytes": 114114,
+        "sourceBounds": {
+          "left": 120,
+          "top": 662,
+          "width": 1519,
+          "height": 210
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-107",
+    "source": "/catalogo/originales/GP-107.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 429,
+        "bytes": 522530,
+        "sourceBounds": {
+          "left": 162,
+          "top": 55,
+          "width": 1446,
+          "height": 461
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 222,
+        "bytes": 98807,
+        "sourceBounds": {
+          "left": 139,
+          "top": 665,
+          "width": 1462,
+          "height": 199
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-108",
+    "source": "/catalogo/originales/GP-108.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 417,
+        "bytes": 568328,
+        "sourceBounds": {
+          "left": 134,
+          "top": 41,
+          "width": 1507,
+          "height": 464
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 229,
+        "bytes": 101067,
+        "sourceBounds": {
+          "left": 132,
+          "top": 642,
+          "width": 1501,
+          "height": 214
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-109",
+    "source": "/catalogo/originales/GP-109.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 429,
+        "bytes": 425650,
+        "sourceBounds": {
+          "left": 131,
+          "top": 10,
+          "width": 1512,
+          "height": 482
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 209,
+        "bytes": 114140,
+        "sourceBounds": {
+          "left": 131,
+          "top": 684,
+          "width": 1479,
+          "height": 184
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-110",
+    "source": "/catalogo/originales/GP-110.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 418,
+        "bytes": 452630,
+        "sourceBounds": {
+          "left": 153,
+          "top": 35,
+          "width": 1466,
+          "height": 453
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 239,
+        "bytes": 101186,
+        "sourceBounds": {
+          "left": 128,
+          "top": 629,
+          "width": 1516,
+          "height": 229
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-111",
+    "source": "/catalogo/originales/GP-111.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 391,
+        "bytes": 437434,
+        "sourceBounds": {
+          "left": 100,
+          "top": 35,
+          "width": 1575,
+          "height": 449
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 222,
+        "bytes": 108889,
+        "sourceBounds": {
+          "left": 105,
+          "top": 652,
+          "width": 1562,
+          "height": 212
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-112",
+    "source": "/catalogo/originales/GP-112.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 394,
+        "bytes": 569612,
+        "sourceBounds": {
+          "left": 136,
+          "top": 49,
+          "width": 1500,
+          "height": 432
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 235,
+        "bytes": 114704,
+        "sourceBounds": {
+          "left": 162,
+          "top": 641,
+          "width": 1427,
+          "height": 210
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-113",
+    "source": "/catalogo/originales/GP-113.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 391,
+        "bytes": 425313,
+        "sourceBounds": {
+          "left": 42,
+          "top": 81,
+          "width": 1450,
+          "height": 414
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 256,
+        "bytes": 115553,
+        "sourceBounds": {
+          "left": 50,
+          "top": 719,
+          "width": 1421,
+          "height": 236
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-114",
+    "source": "/catalogo/originales/GP-114.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 390,
+        "bytes": 426895,
+        "sourceBounds": {
+          "left": 125,
+          "top": 48,
+          "width": 1524,
+          "height": 433
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 223,
+        "bytes": 99878,
+        "sourceBounds": {
+          "left": 126,
+          "top": 646,
+          "width": 1516,
+          "height": 207
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-115",
+    "source": "/catalogo/originales/GP-115.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 399,
+        "bytes": 427985,
+        "sourceBounds": {
+          "left": 157,
+          "top": 42,
+          "width": 1459,
+          "height": 427
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 259,
+        "bytes": 113457,
+        "sourceBounds": {
+          "left": 169,
+          "top": 613,
+          "width": 1439,
+          "height": 243
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-116",
+    "source": "/catalogo/originales/GP-116.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 392,
+        "bytes": 359172,
+        "sourceBounds": {
+          "left": 122,
+          "top": 36,
+          "width": 1528,
+          "height": 437
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 218,
+        "bytes": 80585,
+        "sourceBounds": {
+          "left": 132,
+          "top": 660,
+          "width": 1514,
+          "height": 200
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-117",
+    "source": "/catalogo/originales/GP-117.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 486,
+        "bytes": 729454,
+        "sourceBounds": {
+          "left": 48,
+          "top": 65,
+          "width": 1437,
+          "height": 531
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 251,
+        "bytes": 86231,
+        "sourceBounds": {
+          "left": 54,
+          "top": 760,
+          "width": 1403,
+          "height": 227
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-118",
+    "source": "/catalogo/originales/GP-118.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 330,
+        "bytes": 309187,
+        "sourceBounds": {
+          "left": 91,
+          "top": 130,
+          "width": 1353,
+          "height": 313
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 245,
+        "bytes": 74305,
+        "sourceBounds": {
+          "left": 100,
+          "top": 764,
+          "width": 1332,
+          "height": 208
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-119",
+    "source": "/catalogo/originales/GP-119.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 318,
+        "bytes": 330257,
+        "sourceBounds": {
+          "left": 72,
+          "top": 128,
+          "width": 1388,
+          "height": 307
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 226,
+        "bytes": 92326,
+        "sourceBounds": {
+          "left": 87,
+          "top": 757,
+          "width": 1365,
+          "height": 191
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-120",
+    "source": "/catalogo/originales/GP-120.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 337,
+        "bytes": 379722,
+        "sourceBounds": {
+          "left": 63,
+          "top": 71,
+          "width": 1648,
+          "height": 391
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 212,
+        "bytes": 86350,
+        "sourceBounds": {
+          "left": 84,
+          "top": 640,
+          "width": 1598,
+          "height": 203
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-121",
+    "source": "/catalogo/originales/GP-121.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 323,
+        "bytes": 327290,
+        "sourceBounds": {
+          "left": 76,
+          "top": 102,
+          "width": 1623,
+          "height": 365
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 215,
+        "bytes": 88762,
+        "sourceBounds": {
+          "left": 117,
+          "top": 652,
+          "width": 1513,
+          "height": 197
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-122",
+    "source": "/catalogo/originales/GP-122.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 342,
+        "bytes": 331468,
+        "sourceBounds": {
+          "left": 66,
+          "top": 101,
+          "width": 1401,
+          "height": 339
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 247,
+        "bytes": 92831,
+        "sourceBounds": {
+          "left": 85,
+          "top": 758,
+          "width": 1351,
+          "height": 214
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-123",
+    "source": "/catalogo/originales/GP-123.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 352,
+        "bytes": 378550,
+        "sourceBounds": {
+          "left": 46,
+          "top": 115,
+          "width": 1442,
+          "height": 362
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 242,
+        "bytes": 94475,
+        "sourceBounds": {
+          "left": 74,
+          "top": 731,
+          "width": 1377,
+          "height": 212
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-124",
+    "source": "/catalogo/originales/GP-124.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 318,
+        "bytes": 312282,
+        "sourceBounds": {
+          "left": 105,
+          "top": 103,
+          "width": 1565,
+          "height": 345
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 211,
+        "bytes": 77010,
+        "sourceBounds": {
+          "left": 137,
+          "top": 655,
+          "width": 1482,
+          "height": 187
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-125",
+    "source": "/catalogo/originales/GP-125.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 322,
+        "bytes": 365057,
+        "sourceBounds": {
+          "left": 95,
+          "top": 98,
+          "width": 1583,
+          "height": 355
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 198,
+        "bytes": 85305,
+        "sourceBounds": {
+          "left": 107,
+          "top": 663,
+          "width": 1559,
+          "height": 179
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-126",
+    "source": "/catalogo/originales/GP-126.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 314,
+        "bytes": 304924,
+        "sourceBounds": {
+          "left": 68,
+          "top": 132,
+          "width": 1401,
+          "height": 304
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 220,
+        "bytes": 87943,
+        "sourceBounds": {
+          "left": 82,
+          "top": 756,
+          "width": 1368,
+          "height": 184
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-127",
+    "source": "/catalogo/originales/GP-127.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 327,
+        "bytes": 355883,
+        "sourceBounds": {
+          "left": 72,
+          "top": 124,
+          "width": 1392,
+          "height": 319
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 215,
+        "bytes": 83431,
+        "sourceBounds": {
+          "left": 79,
+          "top": 764,
+          "width": 1382,
+          "height": 180
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-128",
+    "source": "/catalogo/originales/GP-128.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 311,
+        "bytes": 277888,
+        "sourceBounds": {
+          "left": 102,
+          "top": 84,
+          "width": 1568,
+          "height": 337
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 214,
+        "bytes": 68821,
+        "sourceBounds": {
+          "left": 112,
+          "top": 662,
+          "width": 1556,
+          "height": 201
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-129",
+    "source": "/catalogo/originales/GP-129.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 406,
+        "bytes": 595245,
+        "sourceBounds": {
+          "left": 94,
+          "top": 19,
+          "width": 1586,
+          "height": 474
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 229,
+        "bytes": 165520,
+        "sourceBounds": {
+          "left": 125,
+          "top": 636,
+          "width": 1525,
+          "height": 217
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-130",
+    "source": "/catalogo/originales/GP-130.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 434,
+        "bytes": 529003,
+        "sourceBounds": {
+          "left": 76,
+          "top": 98,
+          "width": 1384,
+          "height": 447
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 242,
+        "bytes": 169020,
+        "sourceBounds": {
+          "left": 93,
+          "top": 758,
+          "width": 1332,
+          "height": 205
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-131",
+    "source": "/catalogo/originales/GP-131.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 433,
+        "bytes": 644266,
+        "sourceBounds": {
+          "left": 61,
+          "top": 85,
+          "width": 1415,
+          "height": 456
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 228,
+        "bytes": 162544,
+        "sourceBounds": {
+          "left": 78,
+          "top": 758,
+          "width": 1360,
+          "height": 192
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-132",
+    "source": "/catalogo/originales/GP-132.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 435,
+        "bytes": 622357,
+        "sourceBounds": {
+          "left": 56,
+          "top": 85,
+          "width": 1423,
+          "height": 461
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 240,
+        "bytes": 168968,
+        "sourceBounds": {
+          "left": 92,
+          "top": 757,
+          "width": 1348,
+          "height": 205
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-133",
+    "source": "/catalogo/originales/GP-133.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 424,
+        "bytes": 585800,
+        "sourceBounds": {
+          "left": 133,
+          "top": 18,
+          "width": 1508,
+          "height": 474
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 216,
+        "bytes": 158425,
+        "sourceBounds": {
+          "left": 101,
+          "top": 659,
+          "width": 1573,
+          "height": 205
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-134",
+    "source": "/catalogo/originales/GP-134.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 332,
+        "bytes": 366006,
+        "sourceBounds": {
+          "left": 89,
+          "top": 106,
+          "width": 1596,
+          "height": 372
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 223,
+        "bytes": 117060,
+        "sourceBounds": {
+          "left": 107,
+          "top": 644,
+          "width": 1530,
+          "height": 209
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-135",
+    "source": "/catalogo/originales/GP-135.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 366,
+        "bytes": 399359,
+        "sourceBounds": {
+          "left": 69,
+          "top": 110,
+          "width": 1398,
+          "height": 368
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 251,
+        "bytes": 127160,
+        "sourceBounds": {
+          "left": 85,
+          "top": 753,
+          "width": 1356,
+          "height": 219
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-136",
+    "source": "/catalogo/originales/GP-136.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 287,
+        "bytes": 277535,
+        "sourceBounds": {
+          "left": 105,
+          "top": 122,
+          "width": 1565,
+          "height": 303
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 197,
+        "bytes": 96668,
+        "sourceBounds": {
+          "left": 131,
+          "top": 679,
+          "width": 1512,
+          "height": 172
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-137",
+    "source": "/catalogo/originales/GP-137.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 300,
+        "bytes": 327218,
+        "sourceBounds": {
+          "left": 46,
+          "top": 137,
+          "width": 1444,
+          "height": 296
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 248,
+        "bytes": 121067,
+        "sourceBounds": {
+          "left": 108,
+          "top": 716,
+          "width": 1327,
+          "height": 211
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-138",
+    "source": "/catalogo/originales/GP-138.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 289,
+        "bytes": 145806,
+        "sourceBounds": {
+          "left": 69,
+          "top": 133,
+          "width": 1638,
+          "height": 320
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 214,
+        "bytes": 107671,
+        "sourceBounds": {
+          "left": 117,
+          "top": 664,
+          "width": 1537,
+          "height": 198
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-139",
+    "source": "/catalogo/originales/GP-139.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 288,
+        "bytes": 273059,
+        "sourceBounds": {
+          "left": 79,
+          "top": 106,
+          "width": 1615,
+          "height": 314
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 236,
+        "bytes": 108681,
+        "sourceBounds": {
+          "left": 107,
+          "top": 616,
+          "width": 1567,
+          "height": 233
+        }
+      }
+    }
+  },
+  {
+    "id": "GP-140",
+    "source": "/catalogo/originales/GP-140.jpg",
+    "status": "reconstruida-IA-pendiente-revision",
+    "parts": {
+      "frontal": {
+        "width": 1200,
+        "height": 317,
+        "bytes": 353715,
+        "sourceBounds": {
+          "left": 61,
+          "top": 116,
+          "width": 1414,
+          "height": 311
+        }
+      },
+      "pata": {
+        "width": 1200,
+        "height": 227,
+        "bytes": 95556,
+        "sourceBounds": {
+          "left": 96,
+          "top": 773,
+          "width": 1343,
+          "height": 189
+        }
+      }
+    }
+  }
+]

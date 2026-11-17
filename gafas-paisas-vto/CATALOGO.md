@@ -1,5 +1,7 @@
 # Catálogo de monturas — Gafas Paisas VTO
 
+> Actualización 17/11/2026: hay 140 referencias cargadas (GP-001–GP-140), con 280 vistas PNG. Las 44 nuevas (GP-097–GP-140) son reconstrucciones IA y están ocultas al público (`MOSTRAR_VISTAS_IA = false` en `src/lib/catalog.ts`) hasta validarlas contra el producto real. Ver [auditoría y láminas](docs/AUDITORIA_IMAGENES.md). El contenido de TANDA 1 que sigue es histórico.
+
 Guía operativa del catálogo integrado al probador virtual (TANDA 1).
 
 ## Fuente única de datos
@@ -63,7 +65,7 @@ npm run build                    # typecheck + build de producción
 
 ## Flujo de pedido (WhatsApp)
 `buildOrderMessage(code, name)` arma el texto conservando **código + nombre**;
-`buildWhatsAppUrl(msg)` lo codifica contra `WHATSAPP_NUMBER` (`573042064121`).
+`buildWhatsAppUrl(msg)` lo codifica contra `WHATSAPP_NUMBER` (`573235562150`).
 El botón solo abre `wa.me` — **no envía nada automáticamente**. El código que
 viaja es el **solicitado** (alias incluido), no el canónico.
 

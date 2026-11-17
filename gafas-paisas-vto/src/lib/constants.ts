@@ -3,7 +3,7 @@
 export const BRAND_NAME = "Gafas Paisas";
 
 // Número de WhatsApp Business (formato internacional, sin "+" ni espacios)
-export const WHATSAPP_NUMBER = "573042064121";
+export const WHATSAPP_NUMBER = "573235562150";
 
 // Catálogo externo (hoy: carpeta de Drive con las referencias). Cambiar aquí
 // cuando exista tienda online / catálogo de WhatsApp Business.
